@@ -25,5 +25,10 @@ Instructions:
   
   1) log in as guest (this speeds up the process leaving more more hardware resources to be used for the install
   2) press ctrl + alt + t (this brings up the crosh shell)
-  3) enter "cd Downloads" in the crosh shell (navigates to your Downloads directory using the crosh shell)
-  4) type wget https://github.com/altreact/archbk.git
+  3) enter "$cd Downloads" in the crosh shell (navigates to your Downloads directory using the crosh shell)
+  4) get the script (e.g. "$wget https://github.com/altreact/archbk.git" and use a chrome extension to extract the file, or just copy and paste the code into a new file. For simplicity's sake, name the file "make-archbk_drv" and make sure the file is in your Downloads directory)
+  5) get root access in crosh shell "#sudo su" . the script cannot do it's thing, unless it has root access)
+  6) "#chmod +x make-archbk_drv (makes the script executable, let's you run the script)
+  7) "#sh make-archbk_drv (this runs the script)
+  8) let the scrpt do it's thing
+  9) enter "#reboot" 
