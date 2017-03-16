@@ -14,20 +14,6 @@ Big thanks to:
 
 
 
-Instructions:
-
-
-
-Make sure that developer mode is enabled.
-
-  hold down the ESC and Refresh keys and poke the ower button
-  at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
-  confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
-  Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
-  
-  
-  
-  
 Things to be aware of before attempting to run this script:
 
   * As of now, this script is designed to run on the Samsung Series 3 ARM Chromebook, from within chromeOS.
@@ -35,13 +21,24 @@ Things to be aware of before attempting to run this script:
       (see the bottom of this document for a list of upcoming features and additional script plans)
 
   * The script will not run completely unless only one form of install media is mounted.
-    (only 1 SD card / microSD car, or 1 usb drive should be mounted)    
+    (only one port, including the SDcard slot, and or one of the USB ports, should be occupied when you run this script.
+    the script will not do it's thing, if one than one port, or if no ports have storage media plugged in.)    
     
   * There is currently no option to install to internal flash memory
       (feature is in the works)
     
   * You must be connected to the internet when the script is ran. - This script downloads the Arch Linux ARM GNU/Linux distribution. Without being connected to the internet. No internet, and the script can't do it's thing.
-  
+
+
+
+Instructions:
+
+Make sure that developer mode is enabled.
+
+  hold down the ESC and Refresh keys and poke the ower button
+  at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
+  confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
+  Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
   
   
   
