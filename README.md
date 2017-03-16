@@ -76,7 +76,8 @@ Upcomming features:
   
 Possible helper scripts
 
-  * Script that automates the install of MATE Desktop Environment https://mate-desktop.org/ to make the volume and brightness keys work with MATE, to remap the search key as the caps lock key, ect.
+  * Script that automates the install of MATE Desktop Environment https://mate-desktop.org/ to make the volume and brightness keys work with MATE, to remap the search key as the caps lock key, ect, based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
+  
   
   Do you have any questions, comments, and/or concerns? 
   Feedback is welcomed and encoraged.
