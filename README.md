@@ -57,7 +57,7 @@ Download the script, and move it to the root of your Downloads folder
   
 Crosh Shell commands
 
-* Everything in quotes is ment to be entered into the Crosh Shell
+*Everything in quotes is ment to be entered into the Crosh Shell*
   
   4) "cd" (makes sure you are in you "home" directory. "makes it easier to navigate to the Downloads directory")
   5) "cd Downloads" (navigates to your Downloads directory using the crosh shell)
