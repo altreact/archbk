@@ -1,9 +1,7 @@
 # archbk
 
-* confirmed to work with the Samsung Series 3 ARM Chromebook. 
 
-
-A "bash" / "sh" shell script that automates the installation an Arch Linux ARM base system on removable storage, for use with the Samsung Series 3 ARM Chromebook. 
+A "bash" / "sh" shell script that automates the installation an Arch Linux ARM base system on removable storage, for use with the Samsung Series 3 ARM Chromebook. https://www.amazon.com/Samsung-Chromebook-Wi-Fi-11-6-Inch-Model/dp/B009LL9VDG
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
 
@@ -62,8 +60,8 @@ Crosh Shell commands
   4) "cd" (makes sure you are in you "home" directory. "makes it easier to navigate to the Downloads directory")
   5) "cd Downloads" (navigates to your Downloads directory using the crosh shell)
   6) "#sudo su" . (gives you root access - the script cannot do it's thing, unless it's ran root access)
-  7) "chmod +x make-archbk_drv" (makes the script executable, let's the script run properly)
-  8) "sh make-archbk_drv" (this runs the script)
+  7) "chmod +x make-archbk_drv.sh" (makes the script executable, let's the script run properly)
+  8) "sh make-archbk_drv.sh" (this runs the script)
   9) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
   9.5) Let the scrpt do it's thing.
   10) enjoy!
@@ -78,7 +76,7 @@ Upcomming features:
   
 Possible helper scripts
 
-  * Script that automates the install of Mate Desktop Environment, to make the volume and brightness keys work with Mate, to remap the search key as the caps lock key, ect.
+  * Script that automates the install of MATE Desktop Environment https://mate-desktop.org/ to make the volume and brightness keys work with MATE, to remap the search key as the caps lock key, ect.
   
   Do you have any questions, comments, and/or concerns? 
   Feedback is welcomed and encoraged.
