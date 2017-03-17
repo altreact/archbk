@@ -58,16 +58,17 @@ Crosh Shell commands
   4) "cd" (makes sure you are in you "home" directory. "makes it easier to navigate to the Downloads directory")
   5) "cd Downloads" (navigates to your Downloads directory using the crosh shell)
   6) "sudo su" . (gives you root access - the script cannot do it's thing, unless it's ran root access)
-  7) "chmod +x make-archbk_drv.sh" (makes the script executable, let's the script run properly)
-  8) "sh make-archbk_drv.sh" (this runs the script)
-  9) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
-  9.5) Let the scrpt do it's thing.
-  10) enjoy!
-
-Upcomming features:
+  7) "sh make-archbk_drv.sh" (this runs the script)
+  8) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
+  8.5) Let the scrpt do it's thing.
+  9) enjoy!
+  
+Features:
 
   * Install from previous Arch Linux ARM download option (eliminating the need for an internet connection / downloading the operating system every time the script runs.)
 
+Upcomming features:
+  
   * Run this script from any device, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
   
   * Install to internal flash memory (in order to do this, you must run the script from a removable storage device with Arch Linux ARM installed on it.)
