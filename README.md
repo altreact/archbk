@@ -6,9 +6,10 @@ A "bash" / "sh" shell script that automates the installation an Arch Linux ARM b
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
 
 Big thanks to: 
-  Richard Stallman for the GNU operating system, https://www.gnu.org/home.en.html
-  Linus Torvalds for the Linux kernel and git, https://en.wikipedia.org/wiki/Linus_Torvalds
-  the people at Arch Linux ARM, https://archlinuxarm.org
+  Richard Stallman for the GNU operating system https://www.gnu.org/home.en.html,
+  Linus Torvalds for the Linux kernel and git https://en.wikipedia.org/wiki/Linus_Torvalds,
+  the people at Arch Linux https://www.archlinux.org/,
+  the people at Arch Linux ARM https://archlinuxarm.org,
   github,
   and to everyone else involved for making this possible.
 
@@ -56,7 +57,7 @@ Crosh Shell commands
   
   4) "cd" (makes sure you are in you "home" directory. "makes it easier to navigate to the Downloads directory")
   5) "cd Downloads" (navigates to your Downloads directory using the crosh shell)
-  6) "#sudo su" . (gives you root access - the script cannot do it's thing, unless it's ran root access)
+  6) "sudo su" . (gives you root access - the script cannot do it's thing, unless it's ran root access)
   7) "chmod +x make-archbk_drv.sh" (makes the script executable, let's the script run properly)
   8) "sh make-archbk_drv.sh" (this runs the script)
   9) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
