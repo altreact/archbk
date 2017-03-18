@@ -106,17 +106,13 @@ EOF
     echo "drives will not boot from the blue USB 3.0 port"
     echo " "
     echo " "
-    echo " "
-    echo " "
-    echo " "
     read -p "poweroff the chromebook now? [y/n] : " b
     if [ $b = 'y' ]; then
       poweroff
     else
       echo " "
-      echo " "
-      echo " "
       echo "on boot, press ctrl+u to boot $ALARM."
+      echo " "
       echo " "
     fi
   else
@@ -287,8 +283,6 @@ confirm_internet_connection () {
           if [ $a = 'q' ]; then
             exit 1
           fi
-        else
-          continue
         fi
       fi
     fi
