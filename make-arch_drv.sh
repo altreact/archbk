@@ -35,7 +35,7 @@ EOF
   
   echo " "
   echo "5) creating root partition on target device"
-  c="$(echo "cgpt add -i 2 -t data -b 40960 -s XXXXX -l Root /dev/$media" | sed "s/XXXXX/$sub/")"
+  c="$(echo "cgpt add -i 2 -t data -b 40960 -s * -l Root /dev/$media" | sed "s/*/$sub/")"
   
   eval $c
   
