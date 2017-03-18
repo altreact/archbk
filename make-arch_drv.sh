@@ -35,7 +35,7 @@ EOF
   
   echo " "
   echo "5) creating root partition on target device"
-  c="$(echo "cgpt add -i 2 -t data -b 40960 -s * -l Root /dev/$media" | sed "s/*/$sub/")"
+  c="$(echo "cgpt add -i 2 -t data -b 40960 -s XXXXX -l Root /dev/$media" | sed "s/XXXXX/$sub/")"
   
   eval $c
   
@@ -106,13 +106,17 @@ EOF
     echo "drives will not boot from the blue USB 3.0 port"
     echo " "
     echo " "
+    echo " "
+    echo " "
+    echo " "
     read -p "poweroff the chromebook now? [y/n] : " b
     if [ $b = 'y' ]; then
       poweroff
     else
       echo " "
-      echo "on boot, press ctrl+u to boot $ALARM."
       echo " "
+      echo " "
+      echo "on boot, press ctrl+u to boot $ALARM."
       echo " "
     fi
   else
