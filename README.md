@@ -34,9 +34,9 @@ To install Arch Linux ARM to internal flash memory:
    
 After Installation:
 
-   * update you mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
-   * "pacman -Syu"
-   * post install recommendations (https://wiki.archlinux.org/index.php/General_recommendations)
+   1) update you mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
+   2) "pacman -Syu"
+   3) post install recommendations (https://wiki.archlinux.org/index.php/General_recommendations)
 
 Upcomming features:
   
