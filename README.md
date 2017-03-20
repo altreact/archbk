@@ -15,9 +15,10 @@ To install Arch Linux ARM on a SDcard / USB drive:
 
    1) get the script into your "~/Downloads" directory
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
-   3) "sudo sh ~/Downloads/make-archbk_drv.sh"
-   4) follow the instructions & let the script do it's thing.
-   5) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
+   3) "cd ~/Downloads && sudo su"
+   4) "sh make-archbk_drv.sh"
+   5) follow the instructions & let the script do it's thing.
+   6) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
   
 To install Arch Linux ARM to internal flash memory:
 
