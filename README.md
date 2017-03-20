@@ -22,6 +22,7 @@ Download the script, and move it to the root of your Downloads folder
   3) get CROSH shell going (press "ctrl + alt + t", then enter "shell")
   4) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
   5) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
+  
   5.5) Let the scrpt do it's thing.
   6) boot Arch Linux ARM enjoy!
   
