@@ -36,7 +36,7 @@ To install Arch Linux ARM to internal flash memory:
   4) boot Arch Linux ARM (username: root , password: root)
   5) get an internet connection, edit "/etc/pacman.d/mirrorlist"
   6) "pacman -Syu base_devel wget cgpt"
-  7) "sh make-arch_drv.sh"
+  7) "sh make-arch_drv.sh"
 
 Upcomming features:
   
