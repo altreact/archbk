@@ -6,12 +6,12 @@ This script automates the install instructions found here: https://archlinuxarm.
    
 To install Arch Linux ARM on a SDcard / USB drive:
 
-Make sure that developer mode is enabled.
+   Make sure that developer mode is enabled.
 
-  hold down the ESC and Refresh keys and poke the ower button
-  at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
-  confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
-  Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
+     hold down the ESC and Refresh keys and poke the ower button
+     at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
+     confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
+     Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
 
    1) get the script into your "~/Downloads" directory
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
