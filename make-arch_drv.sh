@@ -177,6 +177,7 @@ find_target_device () {
   echo "remove all devices (USB drives / SD cards / microSD cards), except for the device you want Arch Linux ARM installed on." 1>&2
   echo " " 1>&2
   echo "to safely remove a media storage device:" 1>&2
+  echo " " 1>&2
   echo "    1) go to files," 1>&2
   echo "    2) click the eject button next to the device you wish to remove," 1>&2
   echo "    3) unpug the device" 1>&2
