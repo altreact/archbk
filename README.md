@@ -33,7 +33,7 @@ To install Arch Linux ARM to internal flash memory:
    
 After Installation:
 
-   start to set up arch the way you want it (https://wiki.archlinux.org/index.php/General_recommendations)
+   * start to set up arch the way you want it (https://wiki.archlinux.org/index.php/General_recommendations)
 
 Upcomming features:
   
