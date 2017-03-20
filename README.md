@@ -17,27 +17,26 @@ Make sure that developer mode is enabled.
     
 Download the script, and move it to the root of your Downloads folder
 
-  1) Click the green "Clone or download button at the top-right hand side of the page, then clik the blue "Download ZIP" button.
-  2) open the "archbk-master.zip" file, open the "archbk-master" folder, then drag and drop the "make-archbk_drv.sh" into your "Downloads" folder.
-  3) get CROSH shell going (press "ctrl + alt + t", then enter "shell")
-  4) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
-  5) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
+   1) Click the green "Clone or download button at the top-right hand side of the page, then clik the blue "Download ZIP" button.
+   2) open the "archbk-master.zip" file, open the "archbk-master" folder, then drag and drop the "make-archbk_drv.sh" into your "Downloads" folder.
+   3) get CROSH shell going (press "ctrl + alt + t", then enter "shell")
+   4) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
+   5) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
+   5.5) Let the scrpt do it's thing.
+   6) boot Arch Linux ARM enjoy!
   
-  5.5) Let the scrpt do it's thing.
-  6) boot Arch Linux ARM enjoy!
-  
-  username: root
-  password: root
+   username: root
+   password: root
   
 To install Arch Linux ARM to internal flash memory:
 
-  1) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
-  2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
-  3) safely eject all usb storage devices (USB drives, SDcards)
-  4) boot Arch Linux ARM (username: root , password: root)
-  5) get an internet connection "wifi-menu -o" (https://wiki.archlinux.org/index.php/netctl)
-  6) "pacman -S wget cgpt"
-  7) "sh make-arch_drv.sh"
+   1) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
+   2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
+   3) safely eject all usb storage devices (USB drives, SDcards)
+   4) boot Arch Linux ARM (username: root , password: root)
+   5) get an internet connection "wifi-menu -o" (https://wiki.archlinux.org/index.php/netctl)
+   6) "pacman -S wget cgpt"
+   7) "sh make-arch_drv.sh"
 
 Upcomming features:
   
