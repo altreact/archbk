@@ -14,32 +14,30 @@ Make sure that developer mode is enabled.
   at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
   confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
   Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
-    
-Download the script, and move it to the root of your Downloads folder
 
    1) get the script into your "~/Downloads" directory
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
    3) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
    4) follow the instructions the scrip gives you (The script will let you kows if something is funky) & Let the script do it's thing.
-   5) boot Arch Linux ARM enjoy!
-  
-   username: root
-   password: root
+   5) boot Arch Linux ARM enjoy! (username: root , password: root)
   
 To install Arch Linux ARM to internal flash memory:
 
-   1) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
-   2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
-   3) safely eject all usb storage devices (USB drives, SDcards)
+   1) create a chromeos recovery media device (https://goo.gl/FfCQkC)
+   2) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
+   3) "sudo poweroff", then remove all usb storage devices (USB drives, SDcards)
    4) boot Arch Linux ARM (username: root , password: root)
    5) get an internet connection "wifi-menu -o" (for hidden SSID, see https://wiki.archlinux.org/index.php/netctl)
    6) "pacman -S wget cgpt"
    7) "sh make-arch_drv.sh"
+   
+After Installation:
+
+   start to set up arch the way you want it (https://wiki.archlinux.org/index.php/General_recommendations)
 
 Upcomming features:
   
   * run script from any GNU/Linux box
-  
   * run script from any Mac
   
 Possible helper scripts
