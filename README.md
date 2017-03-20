@@ -34,15 +34,15 @@ To install Arch Linux ARM to internal flash memory:
    2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
    3) safely eject all usb storage devices (USB drives, SDcards)
    4) boot Arch Linux ARM (username: root , password: root)
-   5) get an internet connection "wifi-menu -o" (https://wiki.archlinux.org/index.php/netctl)
+   5) get an internet connection "wifi-menu -o" (for hidden SSID, see https://wiki.archlinux.org/index.php/netctl)
    6) "pacman -S wget cgpt"
    7) "sh make-arch_drv.sh"
 
 Upcomming features:
   
-  * Run this script from any GNU/Linux box, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
+  * Run script from any GNU/Linux box
   
-  * Run this script from any Mac, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
+  * Run script from any Mac
   
 Possible helper scripts
 
