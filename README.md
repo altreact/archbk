@@ -40,7 +40,7 @@ To install Arch Linux ARM to internal flash memory:
 
 Upcomming features:
   
-  * Run this script from any linux box, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
+  * Run this script from any GNU/Linux box, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
   
   * Run this script from any Mac, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
   
