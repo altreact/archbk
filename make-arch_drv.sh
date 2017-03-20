@@ -305,9 +305,9 @@ essentials () {
 }
 
 main () {
-  #essentials
+  essentials
   init
-  #install_arch
+  install_arch
 }
 
 main
