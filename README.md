@@ -3,8 +3,6 @@
 A shell script (bash / sh) that automates the installation an Arch Linux ARM base system, for use with the Samsung Series 3 ARM Chromebook. http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
-
-
    
 To install Arch Linux ARM on a SDcard / USB drive:
 
