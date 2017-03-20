@@ -48,7 +48,6 @@ EOF
   
   echo " "
   echo "8) moving to /tmp directory"
-  DIR="$(pwd)"
   cd /tmp
   
   if [ !$path_to_tarball ]; then
@@ -61,6 +60,7 @@ EOF
   
   echo " "
   echo "10) mounting root partition"
+  rm -rf root 2>/dev/null
   mkdir root
   mount /dev/$p2 root/
   
@@ -68,8 +68,8 @@ EOF
   echo "11) extracting rootfs to target device root partition"
   tar -xf $path_to_tarball -C root/
   
-  cp $path_to_tarball root/
-  cp make-arch_drv.sh root/root
+  cp $path_to_tarball root/root/$ARCH
+  cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
   echo " "
   echo "12) writing kernel image to target device kernel partition"
@@ -230,7 +230,7 @@ have_arch () {
     if [ $a ]; then
       if [ $a = 'y' ]; then
         echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
-        echo "$(pwd)/$ARCH"
+        echo "$DIR/$ARCH"
       else
         echo " " 1>&2
         echo "Arch Linux ARM will be downloaded" 1>&2
@@ -295,6 +295,7 @@ confirm_internet_connection () {
 # looks for install tarball in current directory, sets path to tarball, if found
 # checks for internet connection, if needed
 essentials () {
+  DIR="$(pwd)"
   ARCH='ArchLinuxARM-peach-latest.tar.gz'
   ALARM='Arch Linux ARM'
   path_to_tarball="$(have_arch)"
