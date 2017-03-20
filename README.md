@@ -15,8 +15,8 @@ To install Arch Linux ARM on a SDcard / USB drive:
 
    1) get the script into your "~/Downloads" directory
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
-   3) "cd ~/Downloads && sudo su"
-   4) "sh make-archbk_drv.sh"
+   3) "cd ~/Downloads && sudo su" (moves to your current user's downloads directory, then get's root access)
+   4) "sh make-archbk_drv.sh" (runs script)
    5) follow the instructions & let the script do it's thing.
    6) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
   
@@ -24,18 +24,18 @@ To install Arch Linux ARM to internal flash memory:
 
    1) create a chromeos recovery media device (https://goo.gl/FfCQkC)
    2) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
-   3) "sudo poweroff", then remove all usb storage devices (USB drives, SDcards)
+   3) "sudo poweroff" (shuts down chromebook), then remove all usb storage devices (USB drives, SDcards)
    4) boot Arch Linux ARM (username: root , password: root)
    5) get an internet connection "wifi-menu -o" (for hidden SSID, see https://wiki.archlinux.org/index.php/netctl)
-   6) "pacman -S wget cgpt"
-   7) "sh make-arch_drv.sh"
+   6) "pacman -S wget cgpt" (installs software that the script depends on)
+   7) "sh make-arch_drv.sh" (runs the script)
    8) follow the instructions & let the script do it's thing.
    9) reboot, then press ctrl + d to boot Arch Linux ARM (username: root , password: root)
    
 After Installation:
 
    1) update you mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
-   2) "pacman -Syu"
+   2) "pacman -Syu" (updates system and all software)
    3) post install recommendations (https://wiki.archlinux.org/index.php/General_recommendations)
 
 Upcomming features:
