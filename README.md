@@ -33,7 +33,7 @@ To install Arch Linux ARM to internal flash memory:
   1) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
   2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
   3) safely eject all usb storage devices (USB drives, SDcards)
-  4) boot Arch Linux ARM (username: root , password: root
+  4) boot Arch Linux ARM (username: root , password: root)
   5) get an internet connection "wifi-menu -o" (https://wiki.archlinux.org/index.php/netctl)
   6) "pacman -S wget cgpt"
   7) "sh make-arch_drv.sh"
