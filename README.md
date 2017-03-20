@@ -1,38 +1,12 @@
 # archbk
 
-
-A "bash" / "sh" shell script that automates the installation an Arch Linux ARM base system on removable storage, for use with the Samsung Series 3 ARM Chromebook. https://www.amazon.com/Samsung-Chromebook-Wi-Fi-11-6-Inch-Model/dp/B009LL9VDG
+A "bash" / "sh" shell script that automates the installation an Arch Linux ARM base system, for use with the Samsung Series 3 ARM Chromebook. http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
 
-Big thanks to: 
-  Richard Stallman for the GNU operating system https://www.gnu.org/home.en.html,
-  Linus Torvalds for the Linux kernel and git https://en.wikipedia.org/wiki/Linus_Torvalds,
-  the people at Arch Linux https://www.archlinux.org/,
-  the people at Arch Linux ARM https://archlinuxarm.org,
-  github,
-  and to everyone else involved for making this possible.
 
-
-
-Things to be aware of before attempting to run this script:
-
-  * As of now, this script is designed to run on the Samsung Series 3 ARM Chromebook, from within chromeOS.
-      (Option to be able to run this script on another device are in the works.)
-      (see the bottom of this document for a list of upcoming features and additional script plans)
-
-  * The script will not run completely unless only one form of install media is mounted.
-    (only one port, including the SDcard slot, and or one of the USB ports, should be occupied when you run this script.
-    the script will not do it's thing, if one than one port, or if no ports have storage media plugged in.)    
-    
-  * There is currently no option to install to internal flash memory
-      (feature is in the works)
-    
-  * You must be connected to the internet when the script is ran. - This script downloads the Arch Linux ARM GNU/Linux distribution. Without being connected to the internet. No internet, and the script can't do it's thing.
-
-
-
-Instructions:
+   
+To install Arch Linux ARM on a SDcard / USB drive:
 
 Make sure that developer mode is enabled.
 
@@ -40,44 +14,32 @@ Make sure that developer mode is enabled.
   at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
   confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
   Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.
-  
-  
-  
+    
 Download the script, and move it to the root of your Downloads folder
 
   1) Click the green "Clone or download button at the top-right hand side of the page, then clik the blue "Download ZIP" button.
   2) open the "archbk-master.zip" file, open the "archbk-master" folder, then drag and drop the "make-archbk_drv.sh" into your "Downloads" folder.
+  3) press "ctrl + alt + t", then enter "shell"
+  4) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
+  5) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
+  5.5) Let the scrpt do it's thing.
+  6) boot Arch Linux ARM enjoy!
   
+  username: root
+  password: root
+  
+To install Arch Linux ARM to internal flash memory:
 
-  3) press "ctrl + alt + t" (this brings up the crosh shell)
-  
-Crosh Shell commands
-
-*Everything in quotes is ment to be entered into the Crosh Shell*
-  
-  4) "cd" (makes sure you are in you "home" directory. "makes it easier to navigate to the Downloads directory")
-  5) "cd Downloads" (navigates to your Downloads directory using the crosh shell)
-  6) "sudo su" . (gives you root access - the script cannot do it's thing, unless it's ran root access)
-  7) "sh make-archbk_drv.sh" (this runs the script)
-  8) Follow the instructions the scrip gives you (The script will let you kows if something is funky)
-  8.5) Let the scrpt do it's thing.
-  9) enjoy!
-  
-Features:
-
-  * Install from previous Arch Linux ARM download option (eliminating the need for an internet connection / downloading the operating system every time the script runs.)
+  1) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
+  2) create a chromeos recovery media device (https://goo.gl/FfCQkC)
+  3) safely eject all usb storage devices (USB drives, SDcards)
+  4) boot Arch Linux ARM (username: root , password: root)
+  5) "sh make-arch_drv.sh"
 
 Upcomming features:
   
   * Run this script from any device, to create a USB drive / SD card / microSD card that will let you run Arch Linux ARM on the Samsung Series 3 ARM Chromebook.
   
-  * Install to internal flash memory (in order to do this, you must run the script from a removable storage device with Arch Linux ARM installed on it.)
-  
 Possible helper scripts
 
   * Script that automates the install of MATE Desktop Environment https://mate-desktop.org/ to make the volume and brightness keys work with MATE, to remap the search key as the caps lock key, ect, based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
-  
-  
-  Do you have any questions, comments, and/or concerns? 
-  Feedback is welcomed and encoraged.
-  Send me an email: altreact@gmail.com
