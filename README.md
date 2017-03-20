@@ -20,7 +20,7 @@ Download the script, and move it to the root of your Downloads folder
    1) get the script into your "~/Downloads" directory
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
    3) "sudo sh ~/Downloads/make-archbk_drv.sh" (this runs the script as root. no root, and the script can't do it's thing)
-   4) Follow the instructions the scrip gives you (The script will let you kows if something is funky) & Let the script do it's thing.
+   4) follow the instructions the scrip gives you (The script will let you kows if something is funky) & Let the script do it's thing.
    5) boot Arch Linux ARM enjoy!
   
    username: root
@@ -38,9 +38,9 @@ To install Arch Linux ARM to internal flash memory:
 
 Upcomming features:
   
-  * Run script from any GNU/Linux box
+  * run script from any GNU/Linux box
   
-  * Run script from any Mac
+  * run script from any Mac
   
 Possible helper scripts
 
