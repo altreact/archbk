@@ -19,7 +19,7 @@ Make sure that developer mode is enabled.
    2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
    3) "sudo sh ~/Downloads/make-archbk_drv.sh"
    4) follow the instructions & let the script do it's thing.
-   5) boot Arch Linux ARM enjoy! (username: root , password: root)
+   5) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
   
 To install Arch Linux ARM to internal flash memory:
 
@@ -30,6 +30,7 @@ To install Arch Linux ARM to internal flash memory:
    5) get an internet connection "wifi-menu -o" (for hidden SSID, see https://wiki.archlinux.org/index.php/netctl)
    6) "pacman -S wget cgpt"
    7) "sh make-arch_drv.sh"
+   8) reboot, then press ctrl + d to boot Arch Linux ARM (username: root , password: root)
    
 After Installation:
 
