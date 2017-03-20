@@ -6,7 +6,7 @@ This script automates the install instructions found here: https://archlinuxarm.
    
 To install Arch Linux ARM on a SDcard / USB drive:
 
-   Make sure that developer mode is enabled.
+   * Make sure that developer mode is enabled.
 
      hold down the ESC and Refresh keys and poke the ower button
      at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
