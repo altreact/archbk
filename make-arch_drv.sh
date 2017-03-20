@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 # automated Arch Linux ARM install to target device
 # target formatting, partitioning
 # transfer rootfs, write kernel image
@@ -29,16 +28,16 @@ EOF
   
   echo " "
   echo "4) calculating how big to make the root partition on target device, using information from cgpt show"
-  sec="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r "s/\b[0-9]{1,3}\b[ a-Z]*//g" | sed "s/ //g")"
+  sec="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
   
-  sub=`expr $sec - 40960`
+  sub="$(expr $sec - 40960)"
   
   echo " "
   echo "5) creating root partition on target device"
-  c="$(echo "cgpt add -i 2 -t data -b 40960 -s XXXXX -l Root /dev/$media" | sed "s/XXXXX/$sub/")"
+  c="$(echo "cgpt add -i 2 -t data -b 40960 -s $sub -l Root /dev/$media")"
   
   eval $c
-  
+
   echo " "
   echo "6) refreshing what the system knows about the partitions on target device"
   partx -a "/dev/$media"
@@ -52,12 +51,12 @@ EOF
   DIR="$(pwd)"
   cd /tmp
   
-  if [ !$path ]; then
-    path="/tmp/$ARCH"
+  if [ !$path_to_tarball ]; then
     echo " "
     echo "9) downloading latest $ALARM tarball"
     rm -rf /tmp/*
     wget http://os.archlinuxarm.org/os/$ARCH
+    path_to_tarball="/tmp/$ARCH"
   fi
   
   echo " "
@@ -67,7 +66,10 @@ EOF
   
   echo " "
   echo "11) extracting rootfs to target device root partition"
-  tar -xf $path -C root/
+  tar -xf $path_to_tarball -C root/
+  
+  cp $path_to_tarball root/
+  cp make-arch_drv.sh root/root
   
   echo " "
   echo "12) writing kernel image to target device kernel partition"
@@ -86,35 +88,24 @@ EOF
   echo " "
   echo "installation finished!"
   echo " "
-  echo " "
-  echo " "
   if [ -e "/tmp/$ARCH" ]; then
     read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
-    if [ $a = 'y' ];
-      then
-        mv $ARCH $DIR/$ARCH
+    if [ $a = 'y' ]; then
+      mv $ARCH $DIR/$ARCH
+      
     fi
   fi
   cd $DIR
-  echo " "
-  echo " "
-  echo " "
   echo " "
   if [ $media = "sda" ]; then
     echo "if you have your USB drive mounted in the blue USB 3.0 port,"
     echo "don't forget to plug the drive into the black USB 2.0 port before booting"
     echo "drives will not boot from the blue USB 3.0 port"
     echo " "
-    echo " "
-    echo " "
-    echo " "
-    echo " "
     read -p "poweroff the chromebook now? [y/n] : " b
     if [ $b = 'y' ]; then
       poweroff
     else
-      echo " "
-      echo " "
       echo " "
       echo "on boot, press ctrl+u to boot $ALARM."
       echo " "
@@ -130,6 +121,58 @@ EOF
 # confirms that only the install target device is connected
 # stores appropriate device names, based on drive inserted (sda, mmcblk1, mmcblk1p2, ect)
 init () {
+  if [ "$(cat /etc/lsb-release | head -n1 | sed 's/[_].*$//')" = "CHROMEOS" ]; then
+    os_dev="mmcblk0"
+  else
+    os_dev="$(lsblk | grep '[/]$' | sed 's/[^0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
+  fi
+  
+find_target_device () {
+  count=0
+  while [ $count -lt 1 ]
+  do
+    base="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed "s/^$os_dev.*$//g" | grep 'G')"
+    devices="$(echo $base | sed "s/[ ]*[0-9]*\.[0-9]G$//g")"
+    sizes="$(echo $base | sed "s/[a-z ]*//g")"
+    
+    for dev in $devices;
+    do
+      count=`expr "$count" + 1`
+      media=$dev
+    done
+    
+    if [ $count -gt 1 ]; then
+      echo "#############################################" 1>&2
+      echo '# more than one install media was detected. #' 1>&2
+      echo "#############################################" 1>&2
+      echo " " 1>&2
+      echo "Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device." 1>&2
+      echo " " 1>&2
+      echo " " 1>&2
+      echo "to safely remove a media storage device:" 1>&2
+      echo "    1) go to files," 1>&2
+      echo "    2) click the eject button next to the device you wish to remove," 1>&2
+      echo "    3) unpug the device" 1>&2
+      echo " " 1>&2
+      echo " " 1>&2
+      read -p "press any key to continue..." n
+      count=0
+    elif [ $count -lt 1 ]; then
+      echo " " 1>&2
+      echo "##################################" 1>&2
+      echo '# no install media was detected. #' 1>&2
+      echo "##################################" 1>&2
+      echo " " 1>&2
+      echo 'insert the media you want arch linux to be installed on,' 1>&2
+      echo " " 1>&2
+      echo " " 1>&2
+      read -p "press any key to continue..." n
+      count=0
+    fi
+  done
+  echo $media
+}
+
   echo " " 1>&2
   echo "remove all devices (USB drives / SD cards / microSD cards), except for the device you want Arch Linux ARM installed on." 1>&2
   echo " " 1>&2
@@ -140,52 +183,17 @@ init () {
   echo " " 1>&2
   echo " " 1>&2
   read -p "press any continue..." n
-  
-  count=0
-  
-  while [ $count -lt 1 ]
-  do
-    devices="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed 's/^mmcblk0.*$//g' | grep 'G' | sed "s/[ ]*[0-9]*\.[0-9]G$//g")"
-    sizes="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed 's/^mmcblk0.*$//g' | grep "G" | sed "s/[a-z ]*//g")"
-    
-    for dev in $devices;
-    do
-      count=`expr "$count" + 1`
-      media=$dev
-    done
-    
-    if [ $count -gt 1 ];
-      then
-        echo "#############################################" 1>&2
-        echo '# more than one install media was detected. #' 1>&2
-        echo "#############################################" 1>&2
-        echo " " 1>&2
-        echo "Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device." 1>&2
-        echo " " 1>&2
-        echo " " 1>&2
-        echo "to safely remove a media storage device:" 1>&2
-        echo "    1) go to files," 1>&2
-        echo "    2) click the eject button next to the device you wish to remove," 1>&2
-        echo "    3) unpug the device" 1>&2
-        echo " " 1>&2
-        echo " " 1>&2
-        read -p "press any key to continue..." n
-        count=0
-    elif [ $count -lt 1 ];
-      then
-        echo " " 1>&2
-        echo "##################################" 1>&2
-        echo '# no install media was detected. #' 1>&2
-        echo "##################################" 1>&2
-        echo " " 1>&2
-        echo 'insert the media you want arch linux to be installed on,' 1>&2
-        echo " " 1>&2
-        echo " " 1>&2
-        read -p "press any key to continue..." n
-        count=0
-    fi
-  done
 
+  media="$(find_target_device)"
+  
+  if [ ${#media} -gt 3 ]; then
+    p1=$media"p1"
+    p2=$media"p2"
+  else
+    p1=$media"1"
+    p2=$media"2"
+  fi
+  
   echo " " 1>&2
   echo "****************" 1>&2
   echo "**            **" 1>&2
@@ -206,15 +214,6 @@ init () {
     fi
   else
     continue
-  fi
-  
-  if [ ${#media} -gt 3 ];
-    then
-      p1=$media"p1"
-      p2=$media"p2"
-  else
-    p1=$media"1"
-    p2=$media"2"
   fi
 }
 
@@ -253,7 +252,7 @@ confirm_internet_connection () {
   }
   
   while [ true ]
-    do
+  do
     # try to connect to archlinuxarm.org
     if [ "$(check_conn 'archlinuxarm.org')" ]; then
       break
@@ -268,7 +267,7 @@ confirm_internet_connection () {
       # if both connections failed
       else
         clear
-        echo " "
+        echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
         echo " "                                                                 1>&2
         echo "ArchLinuxARM-peach-latest.tar.gz was not found in this directory," 1>&2
@@ -293,23 +292,22 @@ confirm_internet_connection () {
   done
 }
 
-
 # looks for install tarball in current directory, sets path to tarball, if found
 # checks for internet connection, if needed
 essentials () {
   ARCH='ArchLinuxARM-peach-latest.tar.gz'
   ALARM='Arch Linux ARM'
-  path="$(have_arch)"
+  path_to_tarball="$(have_arch)"
   
-  if [ !$path ]; then
+  if [ !$path_to_tarball ]; then
     confirm_internet_connection
   fi
 }
 
 main () {
-  essentials
+  #essentials
   init
-  install_arch
+  #install_arch
 }
 
 main
