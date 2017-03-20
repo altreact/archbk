@@ -68,6 +68,9 @@ EOF
   echo "11) extracting rootfs to target device root partition"
   tar -xf $path_to_tarball -C root/
   
+  # moves script and tarball into /root of target
+  # enables one to run script again from ne arch install
+  # see README.md for more info
   cp $path_to_tarball root/root/$ARCH
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
