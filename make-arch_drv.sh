@@ -11,7 +11,7 @@ install_arch () {
 
   echo " "
   echo "1) unmounting target device"
-  umount /dev/$media*
+  umount /dev/$media* 2>/dev/null
   
   fdisk /dev/$media <<EOF
   g
@@ -48,6 +48,7 @@ EOF
   
   echo " "
   echo "8) moving to working directory"
+
   mkdir arch_tmp
   cd arch_tmp
   
@@ -88,21 +89,20 @@ EOF
   echo " "
   echo "installation finished!"
   echo " "
-  if [ -e "/tmp/$ARCH" ]; then
+  if [ -e "$ARCH" ]; then
     read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
       mv $ARCH $DIR/$ARCH
       
     fi
   fi
-  rm -rf arch_tmp
-  cd $DIR
+  
+  cd .. && rm -rf arch_tmp
+  
   echo " "
-  if [ $media = "sda" ]; then
-    echo "if you have your USB drive mounted in the blue USB 3.0 port,"
-    echo "don't forget to plug the drive into the black USB 2.0 port before booting"
+  if [ ${#media} -lt 3 ]; then
     echo "drives will not boot from the blue USB 3.0 port"
-    echo " "
+    echo "remember to plug drive into black USB 2.0 port to boot from it "
     read -p "poweroff the chromebook now? [y/n] : " b
     if [ $b = 'y' ]; then
       poweroff
@@ -134,7 +134,6 @@ find_target_device () {
   do
     base="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed "s/^$os_dev.*$//g" | grep 'G')"
     devices="$(echo $base | sed "s/[ ]*[0-9]*\.[0-9]G$//g")"
-    sizes="$(echo $base | sed "s/[a-z ]*//g")"
     
     for dev in $devices;
     do
@@ -185,9 +184,15 @@ find_target_device () {
   echo " " 1>&2
   echo " " 1>&2
   read -p "press any continue..." n
-
-  media="$(find_target_device)"
   
+  if [ !$target_dev ]; then
+    media="$(find_target_device)"
+    echo "find_target_device"
+  else
+    media=$target_dev
+    echo "target_dev"
+  fi
+ 
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
@@ -297,6 +302,31 @@ confirm_internet_connection () {
 # looks for install tarball in current directory, sets path to tarball, if found
 # checks for internet connection, if needed
 essentials () {
+  
+  manual_drive_selection () {
+    if [ $1 ]; then
+      release="$(cat /etc/lsb-release | head -n1 | sed 's/[_].*$//')"
+      root_dev="$(lsblk 2>/dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
+      here="$(lsblk 2>/dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
+
+      if [ -e $here ] || [ $2 ]; then
+        echo "invalid device name" 1>&2
+        exit 1
+      elif [ $release = "CHROMEOS" ] && [ $1  = 'mmcblk0' ] || [ $1 = $root_dev ] 2>/dev/null; then
+        echo "cannot install to $1. os is running from here" 1>&2
+	exit 1
+      else
+        echo "$1"      
+      fi
+    fi
+  }
+  
+  target_dev="$(manual_drive_selection $1)"
+
+  if [ "$target_dev" != "$1" ]; then
+    exit 1
+  fi
+
   DIR="$(pwd)"
   ARCH='ArchLinuxARM-peach-latest.tar.gz'
   ALARM='Arch Linux ARM'
@@ -308,9 +338,9 @@ essentials () {
 }
 
 main () {
-  essentials
+  essentials $1
   init
   install_arch
 }
 
-main
+main $1
