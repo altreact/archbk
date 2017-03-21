@@ -47,7 +47,7 @@ EOF
   mkfs.ext4 -F "/dev/$p2"
   
   echo " "
-  echo "8) moving to /tmp directory"
+  echo "8) moving to working directory"
   mkdir arch_tmp
   cd arch_tmp
   
@@ -80,9 +80,7 @@ EOF
   echo " "
   echo "13) unmounting target device"
   umount root
-  
-  rm -rf root
-  
+
   echo " "
   echo "syncing"
   sync
@@ -97,6 +95,7 @@ EOF
       
     fi
   fi
+  rm -rf arch_tmp
   cd $DIR
   echo " "
   if [ $media = "sda" ]; then
