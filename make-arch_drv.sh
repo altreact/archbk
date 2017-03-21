@@ -48,19 +48,18 @@ EOF
   
   echo " "
   echo "8) moving to /tmp directory"
-  cd /tmp
+  mkdir arch_tmp
+  cd /arch_tmp
   
   if [ !$path_to_tarball ]; then
     echo " "
     echo "9) downloading latest $ALARM tarball"
-    rm -rf /tmp/*
     wget http://os.archlinuxarm.org/os/$ARCH
-    path_to_tarball="/tmp/$ARCH"
+    path_to_tarball="$ARCH"
   fi
   
   echo " "
   echo "10) mounting root partition"
-  rm -rf root 2>/dev/null
   mkdir root
   mount /dev/$p2 root/
   
