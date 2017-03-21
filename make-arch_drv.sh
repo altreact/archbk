@@ -49,7 +49,7 @@ EOF
   echo " "
   echo "8) moving to /tmp directory"
   mkdir arch_tmp
-  cd /arch_tmp
+  cd arch_tmp
   
   if [ !$path_to_tarball ]; then
     echo " "
