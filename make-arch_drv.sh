@@ -170,6 +170,7 @@ find_target_device () {
       count=0
     fi
   done
+
   echo $media
 }
 
@@ -187,10 +188,8 @@ find_target_device () {
   
   if [ !$target_dev ]; then
     media="$(find_target_device)"
-    echo "find_target_device"
   else
     media=$target_dev
-    echo "target_dev"
   fi
  
   if [ ${#media} -gt 3 ]; then
