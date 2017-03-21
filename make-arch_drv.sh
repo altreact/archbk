@@ -60,12 +60,12 @@ EOF
   fi
   
   echo " "
-  echo "10) mounting root partition"
+  echo "9) mounting root partition"
   mkdir root
   mount /dev/$p2 root/
   
   echo " "
-  echo "11) extracting rootfs to target device root partition"
+  echo "10) extracting rootfs to target device root partition"
   tar -xf $path_to_tarball -C root/
   
   # moves script and tarball into /root of target
@@ -75,11 +75,11 @@ EOF
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
   echo " "
-  echo "12) writing kernel image to target device kernel partition"
+  echo "11) writing kernel image to target device kernel partition"
   dd if=root/boot/vmlinux.kpart of=/dev/$p1
   
   echo " "
-  echo "13) unmounting target device"
+  echo "12) unmounting target device"
   umount root
 
   echo " "
