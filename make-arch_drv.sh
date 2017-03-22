@@ -5,69 +5,79 @@
 # transfer rootfs, write kernel image
 # optional - let's you keep arch tarball for later use
 install_arch () {
-  echo 
-  echo "enabling USB booting && booting of operating systems that aren't signed by google"
-  crossystem dev_boot_usb=1 dev_boot_signed_only=0 2>/dev/null
 
-  echo
-  echo "1) unmounting target device"
-  umount /dev/$media* 2>/dev/null
+  step=1
+
+  echo 
+  # enabling USB booting && booting of operating systems that aren't signed by google
+  crossystem dev_boot_usb=1 dev_boot_signed_only=0 2> /dev/null
+
+  echo 
+  echo "$step) unmounting target device"
+  step="$(expr $step + 1)"
+  umount /dev/$media* 2> /dev/null
   
-  fdisk /dev/$media <<EOF
+  fdisk /dev/$media 1> /dev/null <<EOF
   g
   w
 EOF
   
-  echo
-  echo "2) creating GPT partition table with fdisk"
-  cgpt create /dev/$media
-  
-  echo
-  echo "3) creating kernel partition on target device"
-  cgpt add -i 1 -t kernel -b 8192 -s 32768 -l Kernel -S 1 -T 5 -P 10 /dev/$media
+  echo 
+  echo "$step) creating GPT partition table with fdisk"
+  step="$(expr $step + 1)"
+  cgpt create /dev/$media 1> /dev/null
   
   echo 
-  echo "4) calculating how big to make the root partition on target device, using information from cgpt show"
+  echo "$step) creating kernel partition on target device"
+  step="$(expr $step + 1)"
+  cgpt add -i 1 -t kernel -b 8192 -s 32768 -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
+  
+  echo 
+  echo "$step) calculating how big to make the root partition on target device, using information from cgpt show"
+  step="$(expr $step + 1)"
   sec="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
-  
   sub="$(expr $sec - 40960)"
-  
-  echo
-  echo "5) creating root partition on target device"
+
+  echo 
+  echo "$step) creating root partition on target device"
+  step="$(expr $step + 1)"
   c="$(echo "cgpt add -i 2 -t data -b 40960 -s $sub -l Root /dev/$media")"
   
-  eval $c
+  eval $c 1> /dev/null
 
-  echo
-  echo "6) refreshing what the system knows about the partitions on target device"
-  partx -a "/dev/$media"
-  
-  echo
-  echo "7) formating target device root partition as ext4"
-  mkfs.ext4 -F "/dev/$p2"
+  echo 
+  echo "$step) refreshing what the system knows about the partitions on target device"
+  step="$(expr $step + 1)"
+  partx -a "/dev/$media" 1> /dev/null
   
   echo 
-  echo "8) moving to working directory"
-
-  # create temp working directory
-  mkdir arch_tmp
-  cd arch_tmp
+  echo "$step) formating target device root partition as ext4"
+  step="$(expr $step + 1)"
+  mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1
   
-  if [ !$path_to_tarball ]; then
+  echo 
+  echo "$step) moving to working directory"
+  step="$(expr $step + 1)"
+  cd /tmp && mkdir arch_tmp 2> /dev/null && cd arch_tmp
+  
+  if [ ! $path_to_tarball ]; then
     echo 
-    echo "9) downloading latest $ALARM tarball"
+    echo "$step) downloading latest $ALARM tarball"
+    step="$(expr $step + 1)"
     wget http://os.archlinuxarm.org/os/$ARCH
     path_to_tarball="$ARCH"
   fi
   
   echo 
-  echo "9) mounting root partition"
-  mkdir root
+  echo "$step) mounting root partition"
+  step="$(expr $step + 1)"
+  mkdir root 2> /dev/null 1>&2
   mount /dev/$p2 root/
   
   echo 
-  echo "10) extracting rootfs to target device root partition"
-  tar -xf $path_to_tarball -C root/
+  echo "$step) extracting rootfs to target device root partition"
+  step="$(expr $step + 1)"
+  tar -xf $path_to_tarball -C root/ 2> /dev/null
   
   # moves script and tarball into /root of target
   # enables one to run script again from ne arch install
@@ -75,22 +85,25 @@ EOF
   cp $path_to_tarball root/root/$ARCH
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
-  echo
-  echo "11) writing kernel image to target device kernel partition"
-  dd if=root/boot/vmlinux.kpart of=/dev/$p1
+  echo 
+  echo "$step) writing kernel image to target device kernel partition"
+  step="$(expr $step + 1)"
+  dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1
   
-  echo
-  echo "12) unmounting target device"
+  echo 
+  echo "$step) unmounting target device"
+  step="$(expr $step + 1)"
   umount root
 
-  echo
-  echo "syncing"
+  echo 
+  echo "$step) syncing"
+  step="$(expr $step + 1)"
   sync
   
   echo
   echo "installation finished!"
-  echo
-  if [ -e "$ARCH" ]; then
+  echo 
+  if [ ! -e "$DIR/$ARCH" ]; then
     read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
       mv $ARCH $DIR/$ARCH
@@ -98,7 +111,6 @@ EOF
     fi
   fi
   
-  # delete temp working directory  
   cd .. && rm -rf arch_tmp
   
   echo 
@@ -111,7 +123,7 @@ EOF
     else
       echo 
       echo "on boot, press ctrl+u to boot $ALARM."
-      echo
+      echo 
     fi
   else
     read -p "reboot now? [y/n] : " c
@@ -129,9 +141,7 @@ init () {
   else
     os_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[^0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
   fi
-
-# finds target device
-# finds one device (other than root directory device, to write os to  
+  
 find_target_device () {
   count=0
   while [ $count -lt 1 ]
@@ -174,28 +184,27 @@ find_target_device () {
       count=0
     fi
   done
-
   echo $media
 }
 
-  echo 1>&2
-  echo "remove all devices (USB drives / SD cards / microSD cards), except for the device you want Arch Linux ARM installed on." 1>&2
-  echo 1>&2
-  echo "to safely remove a media storage device:" 1>&2
-  echo 1>&2
-  echo "    1) go to files," 1>&2
-  echo "    2) click the eject button next to the device you wish to remove," 1>&2
-  echo "    3) unpug the device" 1>&2
-  echo 1>&2
-  echo 1>&2
-  read -p "press any continue..." n
-  
-  if [ !$target_dev ]; then
-    media="$(find_target_device)"
-  else
+  if [ $target_dev ]; then
     media=$target_dev
+  else
+    echo "find_media_target" 1>&2
+    echo 1>&2
+    echo "remove all devices (USB drives / SD cards / microSD cards), except for the device you want Arch Linux ARM installed on." 1>&2
+    echo 1>&2
+    echo "to safely remove a media storage device:" 1>&2
+    echo 1>&2
+    echo "    1) go to files," 1>&2
+    echo "    2) click the eject button next to the device you wish to remove," 1>&2
+    echo "    3) unpug the device" 1>&2
+    echo 1>&2
+    echo 1>&2
+    read -p "press any continue..." n
+    media="$(find_target_device)"
   fi
- 
+  
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
@@ -236,7 +245,7 @@ have_arch () {
     echo "\"$ARCH\" was found" 1>&2
     echo 1>&2
     read -p "install $ALARM without re-downloading? [y/n] : " a
-    echo 
+    echo 1>&2 
     if [ $a ]; then
       if [ $a = 'y' ]; then
         echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
@@ -255,7 +264,7 @@ confirm_internet_connection () {
   
   # checks for a good ping to URL
   check_conn () {
-    c="$(ping -c 1 $1 2> /dev/null | head -1 | sed 's/[ ].*//')"
+    c="$(ping -c 1 $1 2>/dev/null | head -1 | sed 's/[ ].*//')"
     if [ $c ]; then
       echo "0"
     fi
@@ -277,20 +286,20 @@ confirm_internet_connection () {
       # if both connections failed
       else
         clear
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
         echo " "                                                                 1>&2
         echo "ArchLinuxARM-peach-latest.tar.gz was not found in this directory," 1>&2
         echo "   and cannot be downloaded without an internet connnection"       1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "           connect to the internet and try again."                 1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "   **********************************************************"     1>&2
         echo "   ***   press enter to retry, or press q+enter to quit   ***"     1>&2
         echo "   **********************************************************"     1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         read -p " " a
         if [ $a ]; then
           if [ $a = 'q' ]; then
@@ -307,27 +316,25 @@ confirm_internet_connection () {
 essentials () {
   
   manual_drive_selection () {
-    if [ $1 ]; then
-      release="$(cat /etc/lsb-release | head -n1 | sed 's/[_].*$//')"
-      root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
-      here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
+
+    release="$(cat /etc/lsb-release | head -n1 | sed 's/[_].*$//')"
+    root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
+    here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
       
-      if [ -e $here 2> /dev/null ] || [ $2 ]; then
-        echo "invalid device name" 1>&2
-        exit 1
-      elif [ $release 2> = "CHROMEOS" ] && [ $1  = 'mmcblk0' ] || [ $1 = $root_dev 2> /dev/null]; then
-        echo "cannot install to $1. os is running from here" 1>&2
-	exit 1
-      else
-        echo "$1"      
-      fi
+    if [ ${#1} -lt 3 ] || [ $2 ] || [ ${#here} -lt 1 ]; then
+      echo "invalid device name" 1>&2
+    elif [ $release = 'CHROMEOS' ] || [ $release = 'DISTRIB' ] &&  [ $1  = 'mmcblk0' ] || [ $1 = $root_dev 2> /dev/null ]; then
+      echo "cannot install to $1. os is running from here" 1>&2
+    else
+      echo "$1"
     fi
   }
   
-  target_dev="$(manual_drive_selection $1)"
-
-  if [ "$target_dev" != "$1" ]; then
-    exit 1
+  if [ $1 ]; then
+    target_dev="$(manual_drive_selection $1 $2)"
+    if [ ! $target_dev ]; then
+      exit 1
+    fi
   fi
 
   DIR="$(pwd)"
@@ -341,9 +348,9 @@ essentials () {
 }
 
 main () {
-  essentials $1
+  essentials $1 $2
   init
   install_arch
 }
 
-main $1
+main $1 $2
