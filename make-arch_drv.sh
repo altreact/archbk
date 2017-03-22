@@ -190,7 +190,6 @@ find_target_device () {
   if [ $target_dev ]; then
     media=$target_dev
   else
-    echo "find_media_target" 1>&2
     echo 1>&2
     echo "remove all devices (USB drives / SD cards / microSD cards), except for the device you want Arch Linux ARM installed on." 1>&2
     echo 1>&2
@@ -208,9 +207,11 @@ find_target_device () {
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
+    type="USB drive"
   else
     p1=$media"1"
     p2=$media"2"
+    type="SDcard"
   fi
   
   echo 1>&2
@@ -221,7 +222,7 @@ find_target_device () {
   echo "****************" 1>&2
   echo 1>&2
   echo 1>&2
-  echo "the device you entered will be formatted." 1>&2
+  echo "$type $media will be formatted." 1>&2
   echo "all data on the device will be wiped," 1>&2
   echo "and Arch Linux ARM will be installed on this device." 1>&2
   echo 1>&2
@@ -321,7 +322,7 @@ essentials () {
     root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
     here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
       
-    if [ ${#1} -lt 3 ] || [ $2 ] || [ ${#here} -lt 1 ]; then
+    if [ ${#1} -lt 3 ] || [ $2 ] || [ ! $here ]; then
       echo "invalid device name" 1>&2
     elif [ $release = 'CHROMEOS' ] || [ $release = 'DISTRIB' ] &&  [ $1  = 'mmcblk0' ] || [ $1 = $root_dev 2> /dev/null ]; then
       echo "cannot install to $1. os is running from here" 1>&2
