@@ -6,12 +6,28 @@
 # optional - let's you keep arch tarball for later use
 install_arch () {
 
+  # crates, enables, and starts netctl profile for hidden ssid in Arch Linux
+  hidden_ssid () {
+
+    touch hidden-network
+    echo '#!/usr/bin/env bash' > hidden-network
+    echo 'read -p 'enter hidden SSID: ' a' >> hidden-network
+    echo 'ssid=$a' >> hidden-network
+    echo 'read -sp 'enter password: ' a' >> hidden-network
+    echo 'passwd=$a' >> hidden-network
+    echo 'passwd="$(wpa_passphrase home $ssid $passwd | grep -e '[ ]*psk' | tail -n1 | sed s/[^0-9]*//)"' >> hidden-network
+    echo 'touch network' >> hidden-network
+    echo 'cat /etc/netctl/examples/wireless-wpa | sed 's/wlan/mlan/' | sed 's/#P/P/' | sed 's/#H/H/' | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > network' >> hidden-network
+    echo 'netctl enable network && netctl start network' >> hidden-network
+  }
+
   step=1
 
+  echo
   # enabling USB booting && booting of operating systems that aren't signed by google
   crossystem dev_boot_usb=1 dev_boot_signed_only=0 2> /dev/null
 
-  echo 
+  echo
   echo "$step) unmounting target device"
   step="$(expr $step + 1)"
   umount /dev/$media* 2> /dev/null
@@ -21,59 +37,59 @@ install_arch () {
   w
 EOF
   
-  echo 
+  echo
   echo "$step) creating GPT partition table with fdisk"
   step="$(expr $step + 1)"
   cgpt create /dev/$media 1> /dev/null
   
-  echo 
+  echo
   echo "$step) creating kernel partition on target device"
   step="$(expr $step + 1)"
   cgpt add -i 1 -t kernel -b 8192 -s 32768 -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
   
-  echo 
+  echo
   echo "$step) calculating how big to make the root partition on target device, using information from cgpt show"
   step="$(expr $step + 1)"
   sec="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
   sub="$(expr $sec - 40960)"
 
-  echo 
+  echo
   echo "$step) creating root partition on target device"
   step="$(expr $step + 1)"
   c="$(echo "cgpt add -i 2 -t data -b 40960 -s $sub -l Root /dev/$media")"
   
   eval $c 1> /dev/null
 
-  echo 
+  echo
   echo "$step) refreshing what the system knows about the partitions on target device"
   step="$(expr $step + 1)"
   partx -a "/dev/$media" 1> /dev/null
   
-  echo 
+  echo
   echo "$step) formating target device root partition as ext4"
   step="$(expr $step + 1)"
   mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1
   
-  echo 
+  echo
   echo "$step) moving to working directory"
   step="$(expr $step + 1)"
   cd /tmp && mkdir arch_tmp 2> /dev/null && cd arch_tmp
   
   if [ ! $path_to_tarball ]; then
-    echo 
+    echo
     echo "$step) downloading latest $ALARM tarball"
     step="$(expr $step + 1)"
     wget http://os.archlinuxarm.org/os/$ARCH
     path_to_tarball="$ARCH"
   fi
   
-  echo 
+  echo
   echo "$step) mounting root partition"
   step="$(expr $step + 1)"
   mkdir root 2> /dev/null 1>&2
   mount /dev/$p2 root/
   
-  echo 
+  echo
   echo "$step) extracting rootfs to target device root partition"
   step="$(expr $step + 1)"
   tar -xf $path_to_tarball -C root/ 2> /dev/null
@@ -84,34 +100,41 @@ EOF
   cp $path_to_tarball root/root/$ARCH
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
-  echo 
+  # creates script for automated obsfucated netctl profile to root
+  # moves script to root/ user's directory
+  
+  hidden_ssid
+  mv hidden-network root/root/hidden-network.sh
+  
+  echo
   echo "$step) writing kernel image to target device kernel partition"
   step="$(expr $step + 1)"
   dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1
   
-  echo 
+  echo
   echo "$step) unmounting target device"
   step="$(expr $step + 1)"
   umount root
 
-  echo 
+  echo
   echo "$step) syncing"
   step="$(expr $step + 1)"
   sync
   
   echo
   echo "installation finished!"
+  echo
   if [ ! -e "$DIR/$ARCH" ]; then
-    read -p "would you like to keep $ARCH for future installs? [y/n] : " a
+    read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
       mv $ARCH $DIR/$ARCH
-      echo "$ARCH is now in $DIR" 
+      
     fi
   fi
   
   cd .. && rm -rf arch_tmp
   
-  echo 
+  echo
   if [ ${#media} -lt 3 ]; then
     echo "drives will not boot from the blue USB 3.0 port"
     echo "remember to plug drive into black USB 2.0 port to boot from it "
@@ -119,8 +142,9 @@ EOF
     if [ $b = 'y' ]; then
       poweroff
     else
-      echo 
+      echo
       echo "on boot, press ctrl+u to boot $ALARM."
+      echo
     fi
   else
     read -p "reboot now? [y/n] : " c
@@ -153,17 +177,18 @@ find_target_device () {
     done
     
     if [ $count -gt 1 ]; then
-      echo 1>&2
       echo "#############################################" 1>&2
       echo '# more than one install media was detected. #' 1>&2
       echo "#############################################" 1>&2
       echo 1>&2
       echo "Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device." 1>&2
       echo 1>&2
+      echo 1>&2
       echo "to safely remove a media storage device:" 1>&2
       echo "    1) go to files," 1>&2
       echo "    2) click the eject button next to the device you wish to remove," 1>&2
       echo "    3) unpug the device" 1>&2
+      echo 1>&2
       echo 1>&2
       read -p "press any key to continue..." n
       count=0
@@ -174,6 +199,7 @@ find_target_device () {
       echo "##################################" 1>&2
       echo 1>&2
       echo 'insert the media you want arch linux to be installed on,' 1>&2
+      echo 1>&2
       echo 1>&2
       read -p "press any key to continue..." n
       count=0
@@ -194,6 +220,7 @@ find_target_device () {
     echo "    2) click the eject button next to the device you wish to remove," 1>&2
     echo "    3) unpug the device" 1>&2
     echo 1>&2
+    echo 1>&2
     read -p "press any continue..." n
     media="$(find_target_device)"
   fi
@@ -201,11 +228,11 @@ find_target_device () {
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
-    type="SDcard"
+    type="USB drive"
   else
     p1=$media"1"
     p2=$media"2"
-    type="USB drive"
+    type="SDcard"
   fi
   
   echo 1>&2
@@ -215,9 +242,11 @@ find_target_device () {
   echo "**            **" 1>&2
   echo "****************" 1>&2
   echo 1>&2
+  echo 1>&2
   echo "$type $media will be formatted." 1>&2
   echo "all data on the device will be wiped," 1>&2
   echo "and Arch Linux ARM will be installed on this device." 1>&2
+  echo 1>&2
   echo 1>&2
   read -p "do you want to continue with this install? [y/n] : " a
   if [ $a ]; then
@@ -238,7 +267,7 @@ have_arch () {
     echo "\"$ARCH\" was found" 1>&2
     echo 1>&2
     read -p "install $ALARM without re-downloading? [y/n] : " a
-    echo 1>&2 
+    echo 1>&2
     if [ $a ]; then
       if [ $a = 'y' ]; then
         echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
@@ -279,7 +308,7 @@ confirm_internet_connection () {
       # if both connections failed
       else
         clear
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
         echo " "                                                                 1>&2
         echo "ArchLinuxARM-peach-latest.tar.gz was not found in this directory," 1>&2
@@ -290,9 +319,9 @@ confirm_internet_connection () {
         echo "   **********************************************************"     1>&2
         echo "   ***   press enter to retry, or press q+enter to quit   ***"     1>&2
         echo "   **********************************************************"     1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
-        echo 1>&2
+        echo " "                                                                 1>&2
         read -p " " a
         if [ $a ]; then
           if [ $a = 'q' ]; then
