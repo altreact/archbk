@@ -8,7 +8,6 @@ install_arch () {
 
   step=1
 
-  echo 
   # enabling USB booting && booting of operating systems that aren't signed by google
   crossystem dev_boot_usb=1 dev_boot_signed_only=0 2> /dev/null
 
@@ -102,12 +101,11 @@ EOF
   
   echo
   echo "installation finished!"
-  echo 
   if [ ! -e "$DIR/$ARCH" ]; then
-    read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
+    read -p "would you like to keep $ARCH for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
       mv $ARCH $DIR/$ARCH
-      
+      echo "$ARCH is now in $DIR" 
     fi
   fi
   
@@ -123,7 +121,6 @@ EOF
     else
       echo 
       echo "on boot, press ctrl+u to boot $ALARM."
-      echo 
     fi
   else
     read -p "reboot now? [y/n] : " c
@@ -156,18 +153,17 @@ find_target_device () {
     done
     
     if [ $count -gt 1 ]; then
+      echo 1>&2
       echo "#############################################" 1>&2
       echo '# more than one install media was detected. #' 1>&2
       echo "#############################################" 1>&2
       echo 1>&2
       echo "Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device." 1>&2
       echo 1>&2
-      echo 1>&2
       echo "to safely remove a media storage device:" 1>&2
       echo "    1) go to files," 1>&2
       echo "    2) click the eject button next to the device you wish to remove," 1>&2
       echo "    3) unpug the device" 1>&2
-      echo 1>&2
       echo 1>&2
       read -p "press any key to continue..." n
       count=0
@@ -178,7 +174,6 @@ find_target_device () {
       echo "##################################" 1>&2
       echo 1>&2
       echo 'insert the media you want arch linux to be installed on,' 1>&2
-      echo 1>&2
       echo 1>&2
       read -p "press any key to continue..." n
       count=0
@@ -199,7 +194,6 @@ find_target_device () {
     echo "    2) click the eject button next to the device you wish to remove," 1>&2
     echo "    3) unpug the device" 1>&2
     echo 1>&2
-    echo 1>&2
     read -p "press any continue..." n
     media="$(find_target_device)"
   fi
@@ -207,11 +201,11 @@ find_target_device () {
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
-    type="USB drive"
+    type="SDcard"
   else
     p1=$media"1"
     p2=$media"2"
-    type="SDcard"
+    type="USB drive"
   fi
   
   echo 1>&2
@@ -221,11 +215,9 @@ find_target_device () {
   echo "**            **" 1>&2
   echo "****************" 1>&2
   echo 1>&2
-  echo 1>&2
   echo "$type $media will be formatted." 1>&2
   echo "all data on the device will be wiped," 1>&2
   echo "and Arch Linux ARM will be installed on this device." 1>&2
-  echo 1>&2
   echo 1>&2
   read -p "do you want to continue with this install? [y/n] : " a
   if [ $a ]; then
@@ -287,7 +279,7 @@ confirm_internet_connection () {
       # if both connections failed
       else
         clear
-        echo " "                                                                 1>&2
+        echo 1>&2
         echo "#################################################################" 1>&2
         echo " "                                                                 1>&2
         echo "ArchLinuxARM-peach-latest.tar.gz was not found in this directory," 1>&2
@@ -298,9 +290,9 @@ confirm_internet_connection () {
         echo "   **********************************************************"     1>&2
         echo "   ***   press enter to retry, or press q+enter to quit   ***"     1>&2
         echo "   **********************************************************"     1>&2
-        echo " "                                                                 1>&2
+        echo 1>&2
         echo "#################################################################" 1>&2
-        echo " "                                                                 1>&2
+        echo 1>&2
         read -p " " a
         if [ $a ]; then
           if [ $a = 'q' ]; then
