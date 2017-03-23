@@ -15,9 +15,9 @@ install_arch () {
     echo 'ssid=$a' >> hidden-network
     echo 'read -sp "enter password: " a' >> hidden-network
     echo 'passwd=$a' >> hidden-network
-    echo 'passwd="$(wpa_passphrase $ssid $passwd | grep -e \'[ ]*psk\' | tail -n1 | sed 's/[^0-9]*//')"' >> hidden-network
+    echo 'passwd="$(wpa_passphrase $ssid $passwd | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"' >> hidden-network
     echo 'touch /etc/netctl/network' >> hidden-network
-    echo 'cat /etc/netctl/examples/wireless-wpa | sed 's/wlan/mlan/g' | sed 's/#P/P/' | sed 's/#H/H/' | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> hidden-network
+    echo 'cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> hidden-network
     echo 'netctl enable network && netctl start network' >> hidden-network
   }
 
