@@ -19,7 +19,7 @@ install_arch () {
     echo 'touch /etc/netctl/network' >> hidden-network
     echo 'cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> hidden-network
     echo 'netctl enable network && netctl start network' >> hidden-network
-    echo 'c="$(ping -c 1 $1 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> hidden-network
+    echo 'c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> hidden-network
     echo 'if [ $c ]; then' >> hidden-network
     echo '  echo "you are now connected to the internet"' >> hidden-network
     echo 'else' >> hidden-network
