@@ -358,11 +358,33 @@ essentials () {
     fi
   }
   
+  have_prog () {
+    $($1 1>/dev/null 2>fail.txt)
+    res="$(cat fail.txt 2>/dev/null | sed 's/ //g')"
+    rm fail.txt 2>/dev/null
+    if [ $res ]; then
+      $(echo "$1 is not installed" >> fail.res)
+    fi
+  }
+  
   if [ $1 ]; then
     target_dev="$(manual_drive_selection $1 $2)"
     if [ ! $target_dev ]; then
       exit 1
     fi
+  fi
+  
+  have_prog sed
+  have_prog grep
+  have_prog lsblk
+  have_prog wget
+  have_prog cgpt
+  
+  if [ -e fail.res ]; then
+    cat fail.res
+    rm fail.res
+    echo "install the program / programs above, then run the script again"
+    exit 1
   fi
 
   DIR="$(pwd)"
