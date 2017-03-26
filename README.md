@@ -1,6 +1,6 @@
 # archbk
 
-A shell script (bash / sh) that automates the installation an Arch Linux ARM base system, for use with the Samsung Series 3 ARM Chromebook. http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
+A robust shell script (bash / sh) that automates the installation an Arch Linux ARM base system, for use with the Samsung Series 3 ARM Chromebook. http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
    
@@ -35,7 +35,7 @@ To install Arch Linux ARM to internal flash memory:
    
 After Installation:
 
-   1) update you mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
+   1) update your mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
    2) "pacman -Syu" (updates system and all software)
    3) post install recommendations (https://wiki.archlinux.org/index.php/General_recommendations)
    4) if you don't fancy the command line interface and want a decent Graphical User Interface (GUI, DE), look below.
