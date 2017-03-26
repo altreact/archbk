@@ -145,7 +145,7 @@ EOF
   cd .. && rm -rf arch_tmp
 
   echo
-  echo "********************************************************************  
+  echo "********************************************************************"
   echo
   echo "press ctrl+u at startup screen to boot $ALARM."
   echo
@@ -193,7 +193,7 @@ find_target_device () {
       echo '# more than one install media was detected. #' 1>&2
       echo "#############################################" 1>&2
       echo 1>&2
-      echo "Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device." 1>&2
+      echo 'Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device.)' 1>&2
       echo 1>&2
       echo 1>&2
       echo "to safely remove a media storage device:" 1>&2
