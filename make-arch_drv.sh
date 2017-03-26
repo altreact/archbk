@@ -26,7 +26,9 @@ install_arch () {
     echo '  netctl enable network && netctl start network' >> helper
     echo '  c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> helper
     echo '  if [ $c ]; then' >> helper
+    echo '    echo' >> helper
     echo '    echo "you are now connected to the internet"' >> helper
+    echo '    echo' >> helper
     echo '  else' >> helper
     echo '    echo "ssid and / or passphrase are invalid."' >> helper
     echo '    exit 1' >> helper
@@ -37,7 +39,9 @@ install_arch () {
     echo ' ' >> helper
     echo 'read -p "do you plan on installing $ALARM to the internal flash memory? [y/n]: " a' >> helper
     echo 'if [ $a = "y" ]; then' >> helper
-    echo '  installing necessary programs' >> helper
+    echo '  echo' >> helper
+    echo '  echo "installing necessary programs"' >> helper
+    echo '  echo' >> helper
     echo '  pacman -S cgpt wget --noconfirm' >> helper
     echo ' ' >> helper
     echo '  read -p "install $ALARM to internal flash memory now? [y/n]: " a' >> helper
