@@ -15,7 +15,7 @@ install_arch () {
     touch helper 
     echo '#!/usr/bin/env bash' > helper
     echo 'read -p "is your ssid hidden? [y/n]: " a' >> helper
-    echo 'if [ a = "y" ]; then' >> helper
+    echo 'if [ $a = "y" ]; then' >> helper
     echo '  read -p "enter hidden SSID: " a' >> helper
     echo '  ssid=$a' >> helper
     echo '  read -sp "enter password: " a' >> helper
