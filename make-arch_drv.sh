@@ -84,6 +84,7 @@ EOF
   if [ ! $path_to_tarball ]; then
     echo
     echo "$step) downloading latest $ALARM tarball"
+    echo
     step="$(expr $step + 1)"
     wget http://os.archlinuxarm.org/os/$ARCH
     path_to_tarball="$ARCH"
@@ -141,7 +142,7 @@ EOF
   cd .. && rm -rf arch_tmp
   
   echo
-  if [ ${#media} -lt 3 ]; then
+  if [ ${#media} -lt 4 ]; then
     echo "drives will not boot from the blue USB 3.0 port"
     echo "remember to plug drive into black USB 2.0 port to boot from it "
     read -p "poweroff the chromebook now? [y/n] : " b
@@ -382,9 +383,10 @@ essentials () {
   have_prog cgpt
   
   if [ -e fail.res ]; then
-    cat fail.res
     rm fail.res
-    echo "install the program / programs above, then run the script again"
+    echo "install"
+    cat fail.res
+    echo "then run this script again"
     exit 1
   fi
 
