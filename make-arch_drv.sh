@@ -55,7 +55,8 @@ install_arch () {
     echo '  read -p "install $ALARM to internal flash memory now? [y/n]: " a' >> helper
     echo ' ' >> helper
     echo '  if [ $a = "y" ]; then ' >> helper
-    echo '    sh make-arch_drv.sh mmcblk0' >> helper
+    echo '  echo' >> helper
+    echo '    sh make-arch_drv.sh' >> helper
     echo '  fi' >> helper
     echo 'fi' >> helper
   }
