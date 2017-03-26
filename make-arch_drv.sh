@@ -7,27 +7,31 @@
 install_arch () {
 
   # crates, enables, and starts netctl profile for hidden ssid in Arch Linux
-  hidden_ssid () {
+  helper_script() {
 
-    touch hidden-network
-    echo '#!/usr/bin/env bash' > hidden-network
-    echo 'read -p "enter hidden SSID: " a' >> hidden-network
-    echo 'ssid=$a' >> hidden-network
-    echo 'read -sp "enter password: " a' >> hidden-network
-    echo 'passwd=$a' >> hidden-network
-    echo 'passwd="$(wpa_passphrase $ssid $passwd | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"' >> hidden-network
-    echo 'touch /etc/netctl/network' >> hidden-network
-    echo 'cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> hidden-network
-    echo 'netctl enable network && netctl start network' >> hidden-network
-    echo 'c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> hidden-network
-    echo 'if [ $c ]; then' >> hidden-network
-    echo '  echo "you are now connected to the internet"' >> hidden-network
-    echo 'else' >> hidden-network
-    echo '  echo "ssid and / or passphrase are invalid."' >> hidden-network
-    echo '  exit 1' >> hidden-network
-    echo 'fi' >> hidden-network
-    echo ' ' >> hidden-network
-    echo 'pacman -S cgpt wget --noconfirm' >> hidden-network
+    touch helper 
+    echo '#!/usr/bin/env bash' > helper
+    echo 'read -p "is your ssid hidden? [y/n]: " a' >> helper
+    echo 'if [ a = 'y' ]; then' >> helper
+    echo '  read -p "enter hidden SSID: " a' >> helper
+    echo '  ssid=$a' >> helper
+    echo '  read -sp "enter password: " a' >> helper
+    echo '  passwd=$a' >> helper
+    echo '  passwd="$(wpa_passphrase $ssid $passwd | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"' >> helper
+    echo '  touch /etc/netctl/network' >>  helper
+    echo '  cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> helper
+    echo '  netctl enable network && netctl start network' >> helper
+    echo '  c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> helper
+    echo '  if [ $c ]; then' >> helper
+    echo '    echo "you are now connected to the internet"' >> helper
+    echo '  else' >> helper
+    echo '    echo "ssid and / or passphrase are invalid."' >> helper
+    echo '    exit 1' >> helper
+    echo 'else' >> helper
+    echo '  wifi-menu -o' >> helper
+    echo 'fi' >>  helper
+    echo ' ' >> helper
+    echo 'pacman -S cgpt wget --noconfirm' >> helper
   }
 
   step=1
@@ -110,11 +114,11 @@ EOF
   cp $path_to_tarball root/root/$ARCH
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
-  # creates script for automated obsfucated netctl profile to root
+  # creates helper script that initiates / automates internet connection
+  # script also installs necessary programs for optional installation to interal flash
   # moves script to root/ user's directory
-  
-  hidden_ssid
-  mv hidden-network root/root/hidden-network.sh
+  helper_script
+  mv helper root/root/helper.sh
   
   echo
   echo "$step) writing kernel image to target device kernel partition"
