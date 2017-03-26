@@ -30,6 +30,7 @@ install_arch () {
     echo '  else' >> helper
     echo '    echo "ssid and / or passphrase are invalid."' >> helper
     echo '    exit 1' >> helper
+    echo '  fi' >> helper
     echo 'else' >> helper
     echo '  wifi-menu -o' >> helper
     echo 'fi' >>  helper
