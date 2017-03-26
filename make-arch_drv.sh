@@ -240,11 +240,11 @@ find_target_device () {
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
-    type="USB drive"
+    type="SDcard"
   else
     p1=$media"1"
     p2=$media"2"
-    type="SDcard"
+    type="USB drive"
   fi
   
   echo 1>&2
