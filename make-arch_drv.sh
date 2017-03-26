@@ -24,7 +24,7 @@ install_arch () {
     echo '  echo "you are now connected to the internet"' >> hidden-network
     echo 'else' >> hidden-network
     echo '  echo "ssid and / or passphrase are invalid."' >> hidden-network
-    echo '  exit 1'
+    echo '  exit 1' >> hidden-network
     echo 'fi' >> hidden-network
     echo ' ' >> hidden-network
     echo 'pacman -S cgpt wget --noconfirm' >> hidden-network
