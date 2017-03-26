@@ -17,9 +17,9 @@ To install Arch Linux ARM on a SDcard / USB drive:
    (the following steps work in chromeOS, and in most GNU/Linux distributions)
    (as long as the system has bash / dash, cgpt, grep, wget, sed) 
 
-   1) get the script into your "~/Downloads" directory
-   2) get CROSH shell going (press ctrl + alt + t, then enter "shell")
-   3) "cd ~/Downloads" (moves to your current user's downloads directory)
+   1) get CROSH shell going (press ctrl + alt + t, then enter "shell")
+   2) "cd ~/Downloads" (moves to your current user's downloads directory)
+   3) "wget https://raw.githubusercontent.com/altreact/archbk/master/make-arch_drv.sh"
    4) "sudo sh make-archbk_drv.sh"  or "sudo sh make-arch_drv.sh <dev>" (<dev> = sda, sdb, mmcblk1, ect)
    5) follow the instructions & let the script do it's thing.
    6) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
@@ -28,20 +28,17 @@ To install Arch Linux ARM to internal flash memory:
 
    1) create a chromeos recovery media device (https://goo.gl/FfCQkC)
    2) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
-   3) "sudo poweroff" (shuts down chromebook), then remove all usb storage devices (USB drives, SDcards)
-   4) boot Arch Linux ARM (username: root , password: root)
-   5) get an internet connection "wifi-menu -o" (for hidden SSID, "sh hidden-ssid.sh")
-   6) "pacman -S wget grep cgpt" (installs software that the script depends on)
-   7) "sh make-arch_drv.sh" or "sudo sh make-arch_drv.sh <dev> (<dev> = mmcblk0 {to install to internal flash memory}, mmcblk1, sda, ect)
-   8) follow the instructions & let the script do it's thing.
-   9) reboot, then press ctrl + d to boot Arch Linux ARM (username: root , password: root)
+   3) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
+   4) "sh helper.sh"
+   5) follow the instructions & let the script do it's thing.
+   6) reboot, then press ctrl + d to boot Arch Linux ARM (username: root , password: root)
    
 After Installation:
 
    1) update you mirrorlist "/etc/pacman.d/mirrorlist" (https://wiki.archlinux.org/index.php/mirrors)
    2) "pacman -Syu" (updates system and all software)
    3) post install recommendations (https://wiki.archlinux.org/index.php/General_recommendations)
-   4) if you done't fancy the command line interface and want a decent Graphical User Interface (GUI, DE), look below.
+   4) if you don't fancy the command line interface and want a decent Graphical User Interface (GUI, DE), look below.
 
 Upcomming features:
   
