@@ -14,30 +14,36 @@ install_arch () {
 
     touch helper 
     echo '#!/usr/bin/env bash' > helper
+    echo ' ' >> helper
     echo 'read -p "is your ssid hidden? [y/n]: " a' >> helper
     echo 'if [ $a = "y" ]; then' >> helper
+    echo ' ' >> helper
     echo '  read -p "enter hidden SSID: " a' >> helper
+    echo ' ' >> helper
     echo '  ssid=$a' >> helper
     echo '  read -sp "enter password: " a' >> helper
+    echo ' ' >> helper
     echo '  passwd=$a' >> helper
     echo '  passwd="$(wpa_passphrase $ssid $passwd | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"' >> helper
     echo '  touch /etc/netctl/network' >>  helper
     echo '  cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> helper
     echo '  netctl enable network && netctl start network' >> helper
-    echo '  c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> helper
-    echo '  if [ $c ]; then' >> helper
-    echo '    echo' >> helper
-    echo '    echo "you are now connected to the internet"' >> helper
-    echo '    echo' >> helper
-    echo '  else' >> helper
-    echo '    echo "ssid and / or passphrase are invalid."' >> helper
-    echo '    exit 1' >> helper
-    echo '  fi' >> helper
     echo 'else' >> helper
     echo '  wifi-menu -o' >> helper
     echo 'fi' >>  helper
     echo ' ' >> helper
+    echo 'c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> helper
+    echo 'if [ $c ]; then' >> helper
+    echo '  echo' >> helper
+    echo '  echo "you are now connected to the internet"' >> helper
+    echo '  echo' >> helper
+    echo 'else' >> helper
+    echo '  echo "ssid and / or passphrase are invalid."' >> helper
+    echo '  exit 1' >> helper
+    echo 'fi' >> helper
+    echo ' ' >> helper
     echo 'read -p "do you plan on installing $ALARM to the internal flash memory? [y/n]: " a' >> helper
+    echo ' ' >> helper
     echo 'if [ $a = "y" ]; then' >> helper
     echo '  echo' >> helper
     echo '  echo "installing necessary programs"' >> helper
@@ -45,6 +51,7 @@ install_arch () {
     echo '  pacman -S cgpt wget --noconfirm' >> helper
     echo ' ' >> helper
     echo '  read -p "install $ALARM to internal flash memory now? [y/n]: " a' >> helper
+    echo ' ' >> helper
     echo '  if [ $a = "y" ]; then ' >> helper
     echo '    sh make-arch_drv.sh mmcblk0' >> helper
     echo '  fi' >> helper
