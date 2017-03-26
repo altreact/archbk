@@ -395,7 +395,7 @@ essentials () {
   ALARM='Arch Linux ARM'
   path_to_tarball="$(have_arch)"
   
-  if [ !$path_to_tarball ]; then
+  if [ ! $path_to_tarball ]; then
     confirm_internet_connection
   fi
 }
