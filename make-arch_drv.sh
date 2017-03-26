@@ -360,7 +360,7 @@ essentials () {
   
   have_prog () {
     $($1 1>/dev/null 2>fail.txt)
-    res="$(cat fail.txt 2>/dev/null | sed 's/ //g')"
+    res="$(cat fail.txt 2>/dev/null | sed -n 's/ //g')"
     rm fail.txt 2>/dev/null
     if [ $res ]; then
       $(echo "$1 is not installed" >> fail.res)
