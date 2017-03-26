@@ -5,14 +5,17 @@
 # transfer rootfs, write kernel image
 # optional - let's you keep arch tarball for later use
 install_arch () {
-
-  # crates, enables, and starts netctl profile for hidden ssid in Arch Linux
+  
+  # creates, enables, and starts netctl profile for hidden ssid in Arch Linux
+  # or starts wifi-menu for ssid that's not hidden
+  # installs wget and cgpt, if user chooses option to install Arch Linux ARM to internal flash memory
+  # gives option to install Arch Linux ARM to internal flash memory
   helper_script() {
 
     touch helper 
     echo '#!/usr/bin/env bash' > helper
     echo 'read -p "is your ssid hidden? [y/n]: " a' >> helper
-    echo 'if [ a = 'y' ]; then' >> helper
+    echo 'if [ a = "y" ]; then' >> helper
     echo '  read -p "enter hidden SSID: " a' >> helper
     echo '  ssid=$a' >> helper
     echo '  read -sp "enter password: " a' >> helper
@@ -31,7 +34,16 @@ install_arch () {
     echo '  wifi-menu -o' >> helper
     echo 'fi' >>  helper
     echo ' ' >> helper
-    echo 'pacman -S cgpt wget --noconfirm' >> helper
+    echo 'read -p "do you plan on installing $ALARM to the internal flash memory? [y/n]: " a' >> helper
+    echo 'if [ $a = "y" ]; then' >> helper
+    echo '  installing necessary programs' >> helper
+    echo '  pacman -S cgpt wget --noconfirm' >> helper
+    echo ' ' >> helper
+    echo '  read -p "install $ALARM to internal flash memory now? [y/n]: " a' >> helper
+    echo '  if [ $a = "y" ]; then ' >> helper
+    echo '    sh make-arch_drv.sh mmcblk0' >> helper
+    echo '  fi' >> helper
+    echo 'fi' >> helper
   }
 
   step=1
@@ -115,7 +127,6 @@ EOF
   cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
   
   # creates helper script that initiates / automates internet connection
-  # script also installs necessary programs for optional installation to interal flash
   # moves script to root/ user's directory
   helper_script
   mv helper root/root/helper.sh
@@ -159,11 +170,13 @@ EOF
     echo "remember to plug drive into black USB 2.0 port to boot from it "
     echo
     read -p "poweroff this device now? [y/n] : " b
+    echo
     if [ $b = 'y' ]; then
       poweroff
     fi
   else
     read -p "reboot now? [y/n] : " c
+    echo
     if [  $c = 'y' ]; then
       reboot
     fi
@@ -244,7 +257,11 @@ find_target_device () {
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
-    type="SDcard"
+    if [ $media = "mmcblk0" ]; then
+      type="Internal Flash Memory aka"
+    else
+      type="SDcard"
+    fi
   else
     p1=$media"1"
     p2=$media"2"
