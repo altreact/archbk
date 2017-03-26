@@ -208,7 +208,7 @@ EOF
 # confirms that only the install target device is connected
 # stores appropriate device names, based on drive inserted (sda, mmcblk1, mmcblk1p2, ect)
 init () {
-  if [ "$(cat /etc/lsb-release | head -n1 | sed 's/[_].*$//')" = "CHROMEOS" ]; then
+  if [ "$(cat /etc/lsb-release 2> /dev/null | head -n1 | sed 's/[_].*$//')" = "CHROMEOS" ]; then
     os_dev="mmcblk0"
   else
     os_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[^0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
