@@ -367,6 +367,13 @@ essentials () {
       $(echo "$1" >> fail.res)
     fi
   }
+
+  if [ $1 ]; then
+    target_dev="$(manual_drive_selection $1 $2)"
+    if [ ! $target_dev ]; then
+      exit 1
+    fi
+  fi
   
   have_prog sed
   have_prog grep
