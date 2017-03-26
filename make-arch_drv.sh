@@ -383,10 +383,10 @@ essentials () {
   have_prog cgpt
   
   if [ -e fail.res ]; then
-    rm fail.res
     echo "install"
     cat fail.res
     echo "then run this script again"
+    rm fail.res
     exit 1
   fi
 
