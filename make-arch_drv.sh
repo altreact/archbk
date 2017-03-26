@@ -142,16 +142,16 @@ EOF
   cd .. && rm -rf arch_tmp
   
   echo
+  echo "press ctrl+u at startup screen to boot $ALARM."
+  echo
+  
   if [ ${#media} -lt 4 ]; then
     echo "drives will not boot from the blue USB 3.0 port"
     echo "remember to plug drive into black USB 2.0 port to boot from it "
-    read -p "poweroff the chromebook now? [y/n] : " b
+    echo
+    read -p "poweroff this device now? [y/n] : " b
     if [ $b = 'y' ]; then
       poweroff
-    else
-      echo
-      echo "on boot, press ctrl+u to boot $ALARM."
-      echo
     fi
   else
     read -p "reboot now? [y/n] : " c
