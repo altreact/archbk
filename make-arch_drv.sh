@@ -42,6 +42,7 @@ install_arch () {
     echo '  exit 1' >> helper
     echo 'fi' >> helper
     echo ' ' >> helper
+    echo '  echo' >> helper
     echo 'read -p "do you plan on installing $ALARM to the internal flash memory? [y/n]: " a' >> helper
     echo ' ' >> helper
     echo 'if [ $a = "y" ]; then' >> helper
@@ -50,6 +51,7 @@ install_arch () {
     echo '  echo' >> helper
     echo '  pacman -S cgpt wget --noconfirm' >> helper
     echo ' ' >> helper
+    echo '  echo' >> helper
     echo '  read -p "install $ALARM to internal flash memory now? [y/n]: " a' >> helper
     echo ' ' >> helper
     echo '  if [ $a = "y" ]; then ' >> helper
