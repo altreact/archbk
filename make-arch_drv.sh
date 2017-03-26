@@ -362,7 +362,7 @@ essentials () {
     $($1 2>fail.txt 1>/dev/null)
     res="$(cat fail.txt 2>/dev/null | sed "s/\n//g" 2>/dev/null | sed 's/ //g')"
     rm fail.txt
-    echo "\$res = $res"
+    
     if [ $res ]; then
       $(echo "$1" >> fail.res)
     fi
