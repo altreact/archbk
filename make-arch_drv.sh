@@ -359,20 +359,14 @@ essentials () {
   }
   
   have_prog () {
-    $($1 1>/dev/null 2>fail.txt)
-    res="$(cat fail.txt 2>/dev/null | sed -n 's/ //g')"
-    rm fail.txt 2>/dev/null
+    $($1 2>fail.txt 1>/dev/null)
+    res="$(cat fail.txt 2>/dev/null | sed "s/\n//g" 2>/dev/null | sed 's/ //g')"
+    rm fail.txt
+    echo "\$res = $res"
     if [ $res ]; then
-      $(echo "$1 is not installed" >> fail.res)
+      $(echo "$1" >> fail.res)
     fi
   }
-  
-  if [ $1 ]; then
-    target_dev="$(manual_drive_selection $1 $2)"
-    if [ ! $target_dev ]; then
-      exit 1
-    fi
-  fi
   
   have_prog sed
   have_prog grep
