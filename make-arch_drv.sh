@@ -24,7 +24,10 @@ install_arch () {
     echo '  echo "you are now connected to the internet"' >> hidden-network
     echo 'else' >> hidden-network
     echo '  echo "ssid and / or passphrase are invalid."' >> hidden-network
+    echo '  exit 1'
     echo 'fi' >> hidden-network
+    echo ' ' >> hidden-network
+    echo 'pacman -S cgpt wget --noconfirm' >> hidden-network
   }
 
   step=1
@@ -140,7 +143,9 @@ EOF
   fi
   
   cd .. && rm -rf arch_tmp
-  
+
+  echo
+  echo "********************************************************************  
   echo
   echo "press ctrl+u at startup screen to boot $ALARM."
   echo
@@ -383,9 +388,11 @@ essentials () {
   have_prog cgpt
   
   if [ -e fail.res ]; then
+    echo
     echo "install"
     cat fail.res
     echo "then run this script again"
+    echo
     rm fail.res
     exit 1
   fi
