@@ -6,7 +6,6 @@ pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-syn
 
 f /sys/class/backlight/backlight.12/brightness 0666 - - - 800
 
-
 echo 'Section "InputClass"
         Identifier "touchpad"
         Driver "synaptics"
@@ -20,24 +19,22 @@ echo 'Section "InputClass"
         Option "VertTwoFingerScroll" "on"
 EndSection' > /etc/X11/xorg.conf.d/70-synaptics.conf
 
-echo '#!/bin/bash
-cur_bri=$(/usr/bin/cat /sys/class/backlight/backlight.12/brightness)
+echo '#!/usr/bin/env bash
 
-if [ $1 == "up" ] ; then
-    bri=$(($cur_bri+200))
-    `echo $bri > /sys/class/backlight/backlight.12/brightness`
+b="/sys/class/backlight/backlight.12/brightness"
+mb="/sys/class/backlight/backlight.12/max_brightness"
+cur_bri=$(/usr/bin/cat $b)
+maxb=$(/usr/bin/cat $mb) 
+incr=100
+
+if [ $1 = "u" ] && [ `expr $cur_bri + $incr` -le $maxb ]; then
+    echo `expr $cur_bri + $incr` > $b
 fi
+if [ $1 = "d" ] && [ `expr $cur_bri - $incr` -ge 0 ]; then
+    echo `expr $cur_bri - $incr` > $b
+fi' >> /usr/local/bin/b
 
-if [ $1 == "down" ] ; then
-    bri=$(($cur_bri-200))
-    `echo $bri > /sys/class/backlight/backlight.12/brightness`
-fi
-
-if [ $1 == "-s" ]; then
-    `echo $2 > /sys/class/backlight/backlight.12/brightness`
-fi' >> /usr/local/bin/brightness
-
-chmod +x /usr/local/bin/brightness
+chmod +x /usr/local/bin/b
 
 echo '[Unit]
 Description=Disable trackpad waking computer
@@ -70,8 +67,6 @@ echo '"xvkbd -xsendevent -text "[Prior]""
     Control + Left' >> ~/.xbindkeysrc
 
 echo 'xbindkeys &' >> ~/.xprofile
-
-hostnamectl set-hostname arch-chromebook
 
 systemctl enable lightdm.service
 systemctl enable NetworkManager.service
