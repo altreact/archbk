@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-synaptics networkmanager network-manager-applet alsa-utils mate-power-manager xorg-xmodmap
+pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-synaptics networkmanager network-manager-applet alsa-utils mate-power-manager xorg-xmodmap --noconfirm
 
---noconfirm
+if [ "$(whoami)" -ne "root" ]; then
 
-f /sys/class/backlight/backlight.12/brightness 0666 - - - 800
+  f /sys/class/backlight/backlight.12/brightness 0666 - - - 800
 
-echo 'Section "InputClass"
+  echo 'Section "InputClass"
         Identifier "touchpad"
         Driver "synaptics"
         MatchIsTouchpad "on"
@@ -19,7 +19,7 @@ echo 'Section "InputClass"
         Option "VertTwoFingerScroll" "on"
 EndSection' > /etc/X11/xorg.conf.d/70-synaptics.conf
 
-echo '#!/usr/bin/env bash
+  echo '#!/usr/bin/env bash
 
 b="/sys/class/backlight/backlight.12/brightness"
 mb="/sys/class/backlight/backlight.12/max_brightness"
@@ -34,9 +34,9 @@ if [ $1 = "d" ] && [ `expr $cur_bri - $incr` -ge 0 ]; then
     echo `expr $cur_bri - $incr` > $b
 fi' >> /usr/local/bin/b
 
-chmod +x /usr/local/bin/b
+  chmod +x /usr/local/bin/b
 
-echo '[Unit]
+  echo '[Unit]
 Description=Disable trackpad waking computer
 
 [Service]
@@ -68,6 +68,7 @@ echo '"xvkbd -xsendevent -text "[Prior]""
 
 echo 'xbindkeys &' >> ~/.xprofile
 
-systemctl enable lightdm.service
-systemctl enable NetworkManager.service
-systemctl enable tp-wake-disable.service
+  systemctl enable lightdm.service
+  systemctl enable NetworkManager.service
+  systemctl enable tp-wake-disable.service
+fi
