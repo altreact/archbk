@@ -13,6 +13,10 @@ install_arch () {
   helper_script() {
 
     echo '#!/usr/bin/env bash
+
+    read -p "enter a username for your user: " username 
+    useradd -m -G wheel -s /bin/bash $username
+    passwd $username
     
     read -p "is your ssid hidden? [y/n]: " a
     echo
@@ -33,6 +37,10 @@ install_arch () {
       echo
       echo "you are now connected to the internet"
       echo
+      echo "adding your new user to sudoers"
+      pacman -S sudo --noconfirm
+      echo "$username ALL=(ALL) ALL" >> /etc/sudoers
+# wget mate-install.sh
     else
       echo
       echo "ssid and / or passphrase are invalid."
@@ -56,7 +64,10 @@ install_arch () {
         echo
         sh make-arch_drv.sh mmcblk0
       fi
-    fi' > helper
+    fi
+
+
+    # prompt user to log back in as their user, then log user out of root' > helper
   }
 
   step=1
