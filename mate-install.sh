@@ -4,10 +4,6 @@ pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-syn
 
 --noconfirm
 
-systemctl enable lightdm.service
-systemctl enable NetworkManager.service
-systemctl enable tp-wake-disable.service
-
 f /sys/class/backlight/backlight.12/brightness 0666 - - - 800
 
 
@@ -22,7 +18,7 @@ echo 'Section "InputClass"
         Option "TapButton3" "2"
         Option "HorizTwoFingerScroll" "on"
         Option "VertTwoFingerScroll" "on"
-EndSection' >> /etc/X11/xorg.conf.d/70-synaptics.conf
+EndSection' > /etc/X11/xorg.conf.d/70-synaptics.conf
 
 echo '#!/bin/bash
 cur_bri=$(/usr/bin/cat /sys/class/backlight/backlight.12/brightness)
@@ -77,4 +73,6 @@ echo 'xbindkeys &' >> ~/.xprofile
 
 hostnamectl set-hostname arch-chromebook
 
-
+systemctl enable lightdm.service
+systemctl enable NetworkManager.service
+systemctl enable tp-wake-disable.service
