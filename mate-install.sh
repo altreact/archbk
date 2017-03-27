@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-synaptics networkmanager network-manager-applet alsa-utils mate-power-manager xorg-xmodmap --noconfirm
+pacman -S mate mate-extra xorg-server lightdm lightdm-gtk-greeter xf86-input-synaptics networkmanager network-manager-applet alsa-utils mate-power-manager xorg-xmodmap chromium --noconfirm
 
 if [ "$(whoami)" -ne "root" ]; then
 
