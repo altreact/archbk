@@ -12,60 +12,51 @@ install_arch () {
   # gives option to install Arch Linux ARM to internal flash memory
   helper_script() {
 
-    touch helper 
-    echo '#!/usr/bin/env bash' > helper
-    echo ' ' >> helper
-    echo '  echo' >> helper
-    echo 'read -p "is your ssid hidden? [y/n]: " a' >> helper
-    echo '  echo' >> helper
-    echo 'if [ $a = "y" ]; then' >> helper
-    echo ' ' >> helper
-    echo '  echo' >> helper
-    echo '  read -p "enter hidden SSID: " a' >> helper
-    echo ' ' >> helper
-    echo '  ssid=$a' >> helper
-    echo '  echo' >> helper
-    echo '  read -sp "enter password: " a' >> helper
-    echo ' ' >> helper
-    echo '  echo' >> helper
-    echo '  passwd=$a' >> helper
-    echo '  passwd="$(wpa_passphrase $ssid $passwd | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"' >> helper
-    echo '  touch /etc/netctl/network' >>  helper
-    echo '  cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network' >> helper
-    echo '  netctl enable network && netctl start network' >> helper
-    echo 'else' >> helper
-    echo '  wifi-menu -o' >> helper
-    echo 'fi' >>  helper
-    echo ' ' >> helper
-    echo 'c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"' >> helper
-    echo 'if [ $c ]; then' >> helper
-    echo '  echo' >> helper
-    echo '  echo "you are now connected to the internet"' >> helper
-    echo '  echo' >> helper
-    echo 'else' >> helper
-    echo '  echo' >> helper
-    echo '  echo "ssid and / or passphrase are invalid."' >> helper
-    echo '  exit 1' >> helper
-    echo 'fi' >> helper
-    echo ' ' >> helper
-    echo '  echo' >> helper
-    echo 'read -p "do you plan on installing Arch Linux ARM to the internal flash memory? [y/n]: " a' >> helper
-    echo ' ' >> helper
-    echo 'if [ $a = "y" ]; then' >> helper
-    echo '  echo' >> helper
-    echo '  echo "installing necessary programs"' >> helper
-    echo '  echo' >> helper
-    echo '  pacman -S cgpt wget --noconfirm' >> helper
-    echo ' ' >> helper
-    echo '  echo' >> helper
-    echo '  read -p "install Arch Linux ARM to internal flash memory now? [y/n]: " a' >> helper
-    echo '  echo' >> helper
-    echo ' ' >> helper
-    echo '  if [ $a = "y" ]; then ' >> helper
-    echo '  echo' >> helper
-    echo '    sh make-arch_drv.sh mmcblk0' >> helper
-    echo '  fi' >> helper
-    echo 'fi' >> helper
+    echo '#!/usr/bin/env bash
+    
+    read -p "is your ssid hidden? [y/n]: " a
+    echo
+    if [ $a = "y" ]; then
+      echo
+      read -p "enter hidden SSID: " a
+      ssid=$a
+      read -sp "enter password: " a
+      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
+      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
+      netctl enable network && netctl start network
+    else
+      wifi-menu -o
+    fi
+    
+    c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"
+    if [ $c ]; then
+      echo
+      echo "you are now connected to the internet"
+      echo
+    else
+      echo
+      echo "ssid and / or passphrase are invalid."
+      exit 1
+    fi
+     
+    echo
+    read -p "do you plan on installing Arch Linux ARM to the internal flash memory? [y/n]: " a
+     
+    if [ $a = "y" ]; then
+      echo
+      echo "installing necessary programs"
+      echo
+      pacman -S cgpt wget --noconfirm
+     
+      echo
+      read -p "install Arch Linux ARM to internal flash memory now? [y/n]: " a
+      echo
+     
+      if [ $a = "y" ]; then 
+        echo
+        sh make-arch_drv.sh mmcblk0
+      fi
+    fi' > helper
   }
 
   step=1
