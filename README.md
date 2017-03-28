@@ -42,9 +42,5 @@ After Installation:
    4) if you don't fancy the command line interface and want a decent Graphical User Interface (GUI, DE), look below.
 
 Upcomming features:
-  
-  * run script from any Mac
-  
-Possible helper scripts
 
-  * Script that automates the install of MATE Desktop Environment https://mate-desktop.org/ to make the volume and brightness keys work with MATE, to remap the search key as the caps lock key, ect, based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
+ * ability to install MATE Desktop Environment (https://mate-desktop.org/), based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
