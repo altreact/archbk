@@ -17,9 +17,13 @@ install_arch () {
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
     passwd $username
+
+    read -p "enter desired hostname: " hostname
+    hostnamectl set-hostname $hostname
     
     read -p "is your ssid hidden? [y/n]: " a
     echo
+
     if [ $a = "y" ]; then
       echo
       read -p "enter hidden SSID: " a
@@ -39,8 +43,18 @@ install_arch () {
       echo
       echo "adding your new user to sudoers"
       pacman -S sudo --noconfirm
+
       echo "$username ALL=(ALL) ALL" >> /etc/sudoers
-# wget mate-install.sh
+
+      read -p "do you want MATE Desktop Environment?: [y/n]" a
+      if [ $a = "y" ]; then
+        pacman -S wget --noconfirm
+        wget https://raw.githubusercontent.com/altreact/archbk/master/mate-install.sh
+        mv mate-install.sh /home/$username/mate-install.sh
+
+        echo "echo "to install MATE Desktop Environment, enter "sudo mate-install.sh"" >> /home/$username/.bashrc
+      fi
+
     else
       echo
       echo "ssid and / or passphrase are invalid."
@@ -63,11 +77,13 @@ install_arch () {
       if [ $a = "y" ]; then 
         echo
         sh make-arch_drv.sh mmcblk0
+      else
+        echo "echo "to install Arch Linux ARM on internal flash memory, enter "sudo make-arch_drv.sh mmcblk0"" >> /home/$username/.bashrc
       fi
+      read -p "the system will now reboot. press enter to continue" a
     fi
-
-
-    # prompt user to log back in as their user, then log user out of root' > helper
+    
+' > helper
   }
 
   step=1
@@ -282,6 +298,7 @@ find_target_device () {
     p1=$media"p1"
     p2=$media"p2"
     if [ $media = "mmcblk0" ]; then
+      sed -i 's/echo "to install Arch Linux ARM on internal flash memory, enter "sudo make-arch_drv.sh mmcblk0"//' ~/.bashrc 2> /dev/null
       type="Internal Flash Memory aka"
     else
       type="SDcard"
