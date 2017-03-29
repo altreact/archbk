@@ -442,7 +442,7 @@ essentials () {
     exit 1
   fi
 
-  cp `basename "$0"` ahhhhhhhhhhhhhhhhhhhh.sh
+  cp `basename "$0"` make-arch_drv.sh
 exit 1
 
   DIR="$(pwd)"
