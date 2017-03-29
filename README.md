@@ -51,7 +51,7 @@ After Installation:
 
 Upcomming features:
  
- * ability to use this same script for multiple devices.
+ * ability to use one script for multiple devices.
    for now, 
      run make-arch_drv.sh for samsung series 3
      run asus-flip-c201-make-arch_drv.sh for asus flip and c201 (installation instructions are the same, just use the asus script instead)
