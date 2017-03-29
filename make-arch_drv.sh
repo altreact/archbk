@@ -38,9 +38,9 @@ install_arch () {
       echo "you are now connected to the internet"
       echo
       echo "adding your new user to sudoers"
-      pacman -S sudo --noconfirm
+      pacman -S sudo vboot-utils --noconfirm
       echo "$username ALL=(ALL) ALL" >> /etc/sudoers
-# wget mate-install.sh
+      crossystem dev_boot_usb=1 dev_boot_signed_only=0
     else
       echo
       echo "ssid and / or passphrase are invalid."
