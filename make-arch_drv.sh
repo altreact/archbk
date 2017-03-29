@@ -174,7 +174,7 @@ EOF
   echo "installation finished!"
   echo
   if [ ! -e "$DIR/$ARCH" ]; then
-    read -p "would you like to keep $ARCH in your "Downloads" directory for future installs? [y/n] : " a
+    read -p "would you like to keep $ARCH for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
       mv $ARCH $DIR/$ARCH
       
