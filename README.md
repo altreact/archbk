@@ -59,6 +59,9 @@ Upcomming features:
    for now, 
    
      run make-arch_drv.sh for samsung series 3
-     run asus-flip-c201-make-arch_drv.sh for asus flip and c201 (installation instructions are the same, just use the asus script instead)
+     
+     run asus-flip-c201-make-arch_drv.sh for asus flip and c201 
+     
+     (installation instructions are the same, just use the asus script instead)
      
  * ability to install MATE Desktop Environment (https://mate-desktop.org/), based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
