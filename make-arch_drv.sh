@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # automated Arch Linux ARM install to target device
 # target formatting, partitioning
 # transfer rootfs, write kernel image
@@ -394,15 +392,17 @@ confirm_internet_connection () {
 # checks for internet connection, if needed
 essentials () {
   
+  # idiot-proofs manual drive selection
   manual_drive_selection () {
 
     release="$(cat /etc/lsb-release 2> /dev/null | head -n1 | sed 's/[_].*$//')"
+    chromeos_root_dev="$(lsblk 2> /dev/null | grep /mnt/stateful_partition | tail -n1 | sed 's/part[ ]*\/mnt\/stateful_partition//g' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/p[0-9]//')"
     root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
     here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
       
     if [ ${#1} -lt 3 ] || [ $2 ] || [ ! $here ]; then
       echo "invalid device name" 1>&2
-    elif [ $release = 'CHROMEOS' 2> /dev/null ] || [ $release = 'DISTRIB' 2> /dev/null ] &&  [ $1  = 'mmcblk0' ] || [ $1 = $root_dev 2> /dev/null ]; then
+    elif [ $release = 'CHROMEOS' 2> /dev/null ] || [ $release = 'DISTRIB' 2> /dev/null ] &&  [ $1  = "$chromeos_root_dev" ] || [ $1 = $root_dev 2> /dev/null ]; then
       echo "cannot install to $1. os is running from here" 1>&2
     else
       echo "$1"
