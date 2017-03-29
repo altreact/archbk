@@ -397,7 +397,7 @@ essentials () {
 
     release="$(cat /etc/lsb-release 2> /dev/null | head -n1 | sed 's/[_].*$//')"
     chromeos_root_dev="$(lsblk 2> /dev/null | grep /mnt/stateful_partition | tail -n1 | sed 's/part[ ]*\/mnt\/stateful_partition//g' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/p[0-9]//')"
-    root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
+    root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/[p].*//')"
     here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
       
     if [ ${#1} -lt 3 ] || [ $2 ] || [ ! $here ]; then
