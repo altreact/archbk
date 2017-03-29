@@ -442,7 +442,8 @@ essentials () {
     exit 1
   fi
 
-  cp asus-flip-c201-make-arch_drv.sh make-arch_drv.sh
+  cp `basename "$0"` ahhhhhhhhhhhhhhhhhhhh.sh
+exit 1
 
   DIR="$(pwd)"
   ARCH='ArchLinuxARM-veyron-latest.tar.gz'
