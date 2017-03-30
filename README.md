@@ -55,6 +55,6 @@ After Installation:
 
 Upcomming features:
  
- * ability to use one script for multiple devices.
+ * ability to use one script for multiple ARM Chromebooks.
      
  * ability to install MATE Desktop Environment (https://mate-desktop.org/), based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
