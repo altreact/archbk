@@ -8,9 +8,11 @@ Confirmed devices:
     
 Upcomming Devices:
     
+   (check out the asus branch for more info)  
+    
    Asus Flip C100P https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
-   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
-   (check out the asus branch for more info)    
+   
+   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/   
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
    
