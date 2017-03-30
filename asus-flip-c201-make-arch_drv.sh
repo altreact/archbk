@@ -11,6 +11,9 @@ install_arch () {
   helper_script() {
 
     echo '#!/usr/bin/env bash
+    
+    echo "enter new root password"
+    passwd root
 
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
@@ -57,15 +60,15 @@ install_arch () {
       echo
       read -p "install Arch Linux ARM to internal flash memory now? [y/n]: " a
       echo
-     
+           
       if [ $a = "y" ]; then 
-        echo
-        sh make-arch_drv.sh mmcblk0
+        echo' > helper
+     
+      echo "      sh $SCRIPTNAME mmcblk0
+        fi
       fi
-    fi
-
-
-    # prompt user to log back in as their user, then log user out of root' > helper
+      read -p 'the system will now reboot. login as your newly created user to continue' a
+      reboot" >> helper
   }
 
   step=1
@@ -110,7 +113,7 @@ EOF
   echo
   echo "$step) refreshing what the system knows about the partitions on target device"
   step="$(expr $step + 1)"
-  partx -a "/dev/$media" 1> /dev/null
+  partx -a "/dev/$media" 1> /dev/null 2>&1
   
   echo
   echo "$step) formating target device root partition as ext4"
@@ -146,7 +149,7 @@ EOF
   # enables one to run script again from ne arch install
   # see README.md for more info
   cp $path_to_tarball root/root/$ARCH
-  cp $DIR/make-arch_drv.sh root/root/make-arch_drv.sh
+  cp $DIR/$SCRIPTNAME root/root/$SCRIPTNAME
   
   # creates helper script that initiates / automates internet connection
   # moves script to root/ user's directory
@@ -442,11 +445,17 @@ essentials () {
     exit 1
   fi
 
-  cp `basename "$0"` make-arch_drv.sh
-exit 1
+  # determine which Arch Linux ARM rootfs to use
 
+  # samsung series 3 chromebook uses "peach"
+  # asus flip and c201 uses "veyron"
+
+  codename='veyron'
+  
+  # get the name of this script
+  SCRIPTNAME=`basename "$0"`
   DIR="$(pwd)"
-  ARCH='ArchLinuxARM-veyron-latest.tar.gz'
+  ARCH="ArchLinuxARM-"$codename"-latest.tar.gz"
   ALARM='Arch Linux ARM'
   path_to_tarball="$(have_arch)"
   
