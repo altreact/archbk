@@ -1,5 +1,12 @@
-# archbk
-
-A robust shell script (bash / sh) that automates the installation of an Arch Linux ARM base system, for use on ARM Chromebooks.
-
 MATE Desktop Environment https://mate-desktop.org/ 
+
+This script should work as it is, yet it isn't finished
+
+
+Instructions:
+
+after installing Arch Linux ARM to internal or external storage, 
+   
+   "sudo sh mate-install.sh"
+
+   reboot
