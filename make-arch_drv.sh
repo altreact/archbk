@@ -449,6 +449,7 @@ essentials () {
   
   # sudo /usr/sbin/chromeos-firmwareupdate -V gives valuable model info
   # have testers run this command and report output
+  # BIOS (RW) version: is the best looking line
 
   # samsung series 3 chromebook uses "peach"
   # asus flip and c201 uses "veyron"
