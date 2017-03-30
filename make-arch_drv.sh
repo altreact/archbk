@@ -446,6 +446,9 @@ essentials () {
   fi
 
   # determine which Arch Linux ARM rootfs to use
+  
+  # sudo /usr/sbin/chromeos-firmwareupdate -V gives valuable model info
+  # have testers run this command and report output
 
   # samsung series 3 chromebook uses "peach"
   # asus flip and c201 uses "veyron"
