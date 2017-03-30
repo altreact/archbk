@@ -4,13 +4,13 @@ A robust shell script (bash / sh) that automates the installation of an Arch Lin
 
 Confirmed devices:
     
-    * Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
+   Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
     
 Upcomming Devices:
     
-    * Asus Flip C100P https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
-    * Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
-    (check out the asus branch for more info)    
+   Asus Flip C100P https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
+   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
+   (check out the asus branch for more info)    
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
    
@@ -30,7 +30,7 @@ To install Arch Linux ARM on a SDcard / USB drive:
 
    1) get CROSH shell going (press ctrl + alt + t, then enter "shell")
    2) "cd ~/Downloads" (moves to your current user's downloads directory)
-   3) "wget https://goo.gl/Iw6sx8"
+   3) "wget https://raw.githubusercontent.com/altreact/archbk/master/make-arch_drv.sh"
    4) "sudo sh make-arch_drv.sh"  or "sudo sh make-arch_drv.sh (dev)" ((dev) = sda, sdb, mmcblk1, ect)
    5) follow the instructions & let the script do it's thing.
    6) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
@@ -54,13 +54,5 @@ After Installation:
 Upcomming features:
  
  * ability to use one script for multiple devices.
- 
-   for now, 
-   
-     run make-arch_drv.sh for samsung series 3
-     
-     run asus-flip-c201-make-arch_drv.sh for asus flip and c201 
-     
-     (installation instructions are the same, just use the asus script instead)
      
  * ability to install MATE Desktop Environment (https://mate-desktop.org/), based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
