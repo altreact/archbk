@@ -471,8 +471,15 @@ essentials () {
   
   # come up with a script to link to the README.md that will harvest chromebook info and send it to us via email, in order to have enought info to account for unconfirmed chromebooks.
 
-  alarm_codename='peach'
-  
+
+  if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
+    alarm_codename='peach'
+    echo $alarm_codename
+  elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then 
+    alarm_codename='veyron'
+    echo $alarm_codename
+  fi
+ 
   # get the name of this script
   SCRIPTNAME=`basename "$0"`
   DIR="$(pwd)"
