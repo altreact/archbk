@@ -6,13 +6,33 @@ Confirmed devices:
     
    Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
     
-Upcomming Devices:
-    
-   (check out the asus branch for more info)  
-    
-   Asus Flip C100P https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
+Unconfirmed Devices:
+
+   if you try the script for one of these devices, and it works, please let me know which chromebook it worked for, so i can add it to confimed devices. thank you.
    
-   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/   
+   HP Chromebook 11 G1 goo.gl/GA02tj
+   
+   HP Chromebook 11 G2
+   
+   Samsung Chromebook 2 13"
+   
+   Samsung Chromebook 2 11"
+   
+   and possibly other Chromebooks with the Exynos ARM Processor
+   
+
+   Asus Flip C100PA https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
+    
+   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
+   
+   AOpen Chromebase Mini http://www.aopen.com/us/chrome-mini-products
+   
+   Asus Chromebit CS10 http://www.aopen.com/us/chrome-mini-products
+   
+   Hisense Chromebook C11 https://www.engadget.com/products/hisense/chromebook/specs/
+   
+   and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
+   
 
 This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
    
