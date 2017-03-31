@@ -460,7 +460,10 @@ essentials () {
   
   # we need to determine if any of the devices above has a different installation process than our current single installation process.
   # if so, we need to set up the proper instsallation process, and link that process to the chromebook that needs it
-  
+ 
+
+  # note: r13 and chromebook plus installs are identical, yet have different kernel partiton sizes than daisy and veyron. both r13 and chromebook plus had identical partition sizes.
+ 
   # we need to organize the residual files left over by the install
   # if the user decides to keep the script and the tarball, lets create an appropriately named directory, rename the script to reflect the chromebook, and put tarball and script in the one directory, just in case the user is dealing with more than one chromebook.
   # let's keep things tidy!
