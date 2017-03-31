@@ -95,20 +95,22 @@ EOF
   echo
   echo "$step) creating kernel partition on target device"
   step="$(expr $step + 1)"
-  cgpt add -i 1 -t kernel -b 8192 -s 32768 -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
+  cgpt add -i 1 -t kernel -b $KERNEL_BEGINNING_SECTOR -s 32768 -l $KERNEL_SIZE -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
   
   echo
   echo "$step) calculating how big to make the root partition on target device, using information from cgpt show"
   step="$(expr $step + 1)"
-  sec="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
-  sub="$(expr $sec - 40960)"
+  DEVICE_SIZE="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
+
+  P2_BEGINNING_SECTOR="$(expr $KERNEL_BEGINNING_SECTOR + $KERNEL_SIZE)"
+  P2_SIZE="$(expr $DEVICE_SIZE - $P2_BEGINNING_SECTOR)"
 
   echo
   echo "$step) creating root partition on target device"
   step="$(expr $step + 1)"
-  c="$(echo "cgpt add -i 2 -t data -b 40960 -s $sub -l Root /dev/$media")"
+  add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SIZE -s $DEVICE_SIZE -l Root /dev/$media")"
   
-  eval $c 1> /dev/null
+  eval $add_root_partition 1> /dev/null
 
   echo
   echo "$step) refreshing what the system knows about the partitions on target device"
@@ -316,34 +318,6 @@ find_target_device () {
   fi
 }
 
-# gives user the option to skip download, if arch linux arm tarball is detected
-have_arch () {
-  # if Arch Linux tarball is found
-  if [ -e $ARCH ]; then
-    # ask user if they want to skip download of new tarball
-    echo 1>&2
-    echo "\"$ARCH\" was found" 1>&2
-    echo 1>&2
-    read -p "install $ALARM without re-downloading? [y/n] : " a
-    echo 1>&2
-    if [ $a ]; then
-      if [ $a = 'y' ]; then
-        echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
-        echo "$DIR/$ARCH"
-      else
-        echo 1>&2
-        echo "Arch Linux ARM will be downloaded" 1>&2
-      fi
-    fi
-  else
-    tarball="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"
-    if [ $tarball ]; then
-      ARCH="$(echo $tarball | head -n1)"
-      echo "$DIR/$ARCH"
-    fi
-  fi
-}
-
 # checks if arch linux arm download is possible
 # loops until the user establishes internet connection, or quits
 confirm_internet_connection () {
@@ -428,19 +402,51 @@ essentials () {
     fi
   }
 
+# gives user the option to skip download, if arch linux arm tarball is detected
+have_arch () {
+  # if Arch Linux tarball is found
+    
+  ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"
+
+  if [ -e $ARCH ]; then
+
+    ARCH="$(echo $tarball | head -n1)"
+    alarm_codename="$(echo $tarball | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
+      
+    # ask user if they want to skip download of new tarball
+    echo 1>&2
+    echo "\"$ARCH\" was found" 1>&2
+    echo 1>&2
+    read -p "install $ALARM without re-downloading? [y/n] : " a
+    echo 1>&2
+    if [ $a ]; then
+      if [ $a = 'y' ]; then
+        echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
+        echo "$DIR/$ARCH"
+      else
+        echo 1>&2
+        echo "Arch Linux ARM will be downloaded" 1>&2
+      fi
+    fi
+  fi
+}
+
   if [ $1 ]; then
     target_dev="$(manual_drive_selection $1 $2)"
     if [ ! $target_dev ]; then
       exit 1
     fi
   fi
-  
+
+  # check system for needed programs  
   have_prog sed
   have_prog grep
   have_prog lsblk
   have_prog wget
   have_prog cgpt
-  
+ 
+  # prompt user to install needed programs
+  # then exit 
   if [ -e fail.res ]; then
     echo
     echo "install"
@@ -451,55 +457,39 @@ essentials () {
     exit 1
   fi
 
-  # determine which Arch Linux ARM rootfs to use
+ # check for previously used ALARM tarball
+ path_to_tarball="$(have_arch)"
   
-  # sudo /usr/sbin/chromeos-firmwareupdate -V gives valuable model info
-  # have testers run this command and report output
+  # if no ALARM tarball is found
+  # check for internet connection for tarball download
+  # parse chromeOS firmware info to identify the chromebook
+  # determin the ALARM codename, based on chromeOS firmeare parse
+  if [ ! $path_to_tarball ]; then
+    confirm_internet_connection
 
-  chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
+  chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
 
-  # samsung chromebook, HP Chromebook 11 G1, HP Chromebook 11 G2, Samsung Chromebook 2 13", Samsung Chromebook 2 11". "Exynos, daisy board variants", use "ALARM peach"
-  # Acer Chromebook R13 "elm board" "Mediatek MT8173 Cortex-A72/A53 2.1GHz/1.7GHz quad-core HMP processor", use "ALARM oak"
-  # ASUS Chromebook Flip C100PA,vASUS Chromebook C201, AOpen Chromebase Mini, Asus Chromebit CS10, AOpen Chromebox Mini, Hisense Chromebook C11, "Rockchip RK3288" use "ALARM veyron"
-  # Samsung Chromebook Plus, "Rockchip RK3399" uses "ALARM gru"
-  # Acer Chromebase, Acer Chromebook 13 (CB5-311), HP Chromebook 14 G3, "Tegra K1 nyan" are unaccounted for so far"
-  
-  # we need to determine if any of the devices above has a different installation process than our current single installation process.
-  # if so, we need to set up the proper instsallation process, and link that process to the chromebook that needs it
- 
+    if [ $chr_codename ]; then
+      
+      if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
+        alarm_codename='peach'
+        KERNEL_SIZE='32768'
+        echo $alarm_codename
+      elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
+        alarm_codename='veyron'
+        KERNEL_SIZE='32768'
+        echo $alarm_codename
+      fi
+    fi 
+  fi
 
-  # note: r13 and chromebook plus installs are identical, yet have different kernel partiton sizes than daisy and veyron. both r13 and chromebook plus had identical partition sizes.
- 
-  # we need to organize the residual files left over by the install
-  # if the user decides to keep the script and the tarball, lets create an appropriately named directory, rename the script to reflect the chromebook, and put tarball and script in the one directory, just in case the user is dealing with more than one chromebook.
-  # let's keep things tidy!
-  
-  # let's have the generated helper script loop if the passwords are incorrect and / or if the internet connection failed
-  # let's also have the script be ran at boot, via root's .bashrc, then remive itself from the bash rc after completion
-  # give the user the option to keep parts of the helper script (hidden ssid, create user, ect)
-  
-  # come up with a script to link to the README.md that will harvest chromebook info and send it to us via email, in order to have enought info to account for unconfirmed chromebooks.
-
-  if [ $chr_codename ];then
-    if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
-      alarm_codename='peach'
-      echo $alarm_codename
-    elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then 
-      alarm_codename='veyron'
-      echo $alarm_codename
-    fi
-  fi 
+  KERNEL_BEGINNING_SECTOR='8192'
   # get the name of this script
   SCRIPTNAME=`basename "$0"`
   DIR="$(pwd)"
   ARCH="ArchLinuxARM-"$alarm_codename"-latest.tar.gz"
   ALARM='Arch Linux ARM'
-  path_to_tarball="$(have_arch)"
-  
-  if [ ! $path_to_tarball ]; then
-    confirm_internet_connection
-  fi
-
+ 
   
 }
 
