@@ -457,6 +457,19 @@ essentials () {
   # ASUS Chromebook Flip C100PA,vASUS Chromebook C201, AOpen Chromebase Mini, Asus Chromebit CS10, AOpen Chromebox Mini, Hisense Chromebook C11, "Rockchip RK3288" use "ALARM veyron"
   # Samsung Chromebook Plus, "Rockchip RK3399" uses "ALARM gru"
   # Acer Chromebase, Acer Chromebook 13 (CB5-311), HP Chromebook 14 G3, "Tegra K1 nyan" are unaccounted for so far"
+  
+  # we need to determine if any of the devices above has a different installation process than our current single installation process.
+  # if so, we need to set up the proper instsallation process, and link that process to the chromebook that needs it
+  
+  # we need to organize the residual files left over by the install
+  # if the user decides to keep the script and the tarball, lets create an appropriately named directory, rename the script to reflect the chromebook, and put tarball and script in the one directory, just in case the user is dealing with more than one chromebook.
+  # let's keep things tidy!
+  
+  # let's have the generated helper script loop if the passwords are incorrect and / or if the internet connection failed
+  # let's also have the script be ran at boot, via root's .bashrc, then remive itself from the bash rc after completion
+  # give the user the option to keep parts of the helper script (hidden ssid, create user, ect)
+  
+  # come up with a script to link to the README.md that will harvest chromebook info and send it to us via email, in order to have enought info to account for unconfirmed chromebooks.
 
   alarm_codename='peach'
   
