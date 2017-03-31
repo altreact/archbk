@@ -449,17 +449,21 @@ essentials () {
   
   # sudo /usr/sbin/chromeos-firmwareupdate -V gives valuable model info
   # have testers run this command and report output
-  # BIOS (RW) version: is the best looking line
 
-  # samsung series 3 chromebook uses "peach"
-  # asus flip and c201 uses "veyron"
+  chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
 
-  codename='peach'
+  # samsung chromebook, HP Chromebook 11 G1, HP Chromebook 11 G2, Samsung Chromebook 2 13", Samsung Chromebook 2 11". "Exynos, daisy board variants", use "ALARM peach"
+  # Acer Chromebook R13 "elm board" "Mediatek MT8173 Cortex-A72/A53 2.1GHz/1.7GHz quad-core HMP processor", use "ALARM oak"
+  # ASUS Chromebook Flip C100PA,vASUS Chromebook C201, AOpen Chromebase Mini, Asus Chromebit CS10, AOpen Chromebox Mini, Hisense Chromebook C11, "Rockchip RK3288" use "ALARM veyron"
+  # Samsung Chromebook Plus, "Rockchip RK3399" uses "ALARM gru"
+  # Acer Chromebase, Acer Chromebook 13 (CB5-311), HP Chromebook 14 G3, "Tegra K1 nyan" are unaccounted for so far"
+
+  alarm_codename='peach'
   
   # get the name of this script
   SCRIPTNAME=`basename "$0"`
   DIR="$(pwd)"
-  ARCH="ArchLinuxARM-"$codename"-latest.tar.gz"
+  ARCH="ArchLinuxARM-"$alarm_codename"-latest.tar.gz"
   ALARM='Arch Linux ARM'
   path_to_tarball="$(have_arch)"
   
