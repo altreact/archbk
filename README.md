@@ -9,45 +9,48 @@ Confirmed devices:
 Unconfirmed Devices:
 
    if you try the script for one of these devices, and it works, please let me know which chromebook it worked for, so i can add it to confimed devices. thank you.
-   
-    HP Chromebook 11 G1 https://goo.gl/GA02tj
 
-    HP Chromebook 11 G2 http://h20564.www2.hp.com/hpsc/doc/public/display?docId=emr_na-c04316411
+   * HP Chromebook 11 G1 https://goo.gl/GA02tj
 
-    Samsung Chromebook 2 11" https://www.amazon.com/Samsung-Chromebook-Laptop-Exynos-Black/dp/B00J49ZH6K
+   * HP Chromebook 11 G2 http://h20564.www2.hp.com/hpsc/doc/public/display?docId=emr_na-c04316411
 
-    Samsung Chromebook 2 13" http://www.samsung.com/us/business/computing/chrome-devices/XE503C32-K01US
+   * Samsung Chromebook 2 11" https://www.amazon.com/Samsung-Chromebook-Laptop-Exynos-Black/dp/B00J49ZH6K
 
-    and possibly other Chromebooks with the Exynos ARM Processor
+   * Samsung Chromebook 2 13" http://www.samsung.com/us/business/computing/chrome-devices/XE503C32-K01US
+
+   * and possibly other Chromebooks with the Exynos ARM Processor
 
 
-    Asus Flip C100PA https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
 
-    Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
+   * Asus Flip C100PA https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
 
-    AOpen Chromebase Mini http://www.aopen.com/us/chrome-mini-products
+   * Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
 
-    Asus Chromebit CS10 http://www.aopen.com/us/chrome-mini-products
+   * AOpen Chromebase Mini http://www.aopen.com/us/chrome-mini-products
 
-    Hisense Chromebook C11 https://www.engadget.com/products/hisense/chromebook/specs/
+   * Asus Chromebit CS10 http://www.aopen.com/us/chrome-mini-products
 
-    and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
+   * Hisense Chromebook C11 https://www.engadget.com/products/hisense/chromebook/specs/
+
+   * and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
+
 
 
 Upcomming Devices:
 
-   Acer Chromebook R13
+   * Acer Chromebook R13
    
-   Samsung Chromebook Plus
+   * Samsung Chromebook Plus
+   
    
    
 Possible Future Upcomming Devices:
    
-   Acer Chromebase
+   * Acer Chromebase
    
-   Acer Chromebook 13 (CB5-311) 
+   * Acer Chromebook 13 (CB5-311) 
    
-   HP Chromebook 14 G3
+   * HP Chromebook 14 G3
    
    
 
