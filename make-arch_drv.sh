@@ -335,6 +335,11 @@ have_arch () {
         echo "Arch Linux ARM will be downloaded" 1>&2
       fi
     fi
+  else
+    tarball="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"    if [ $tarball ]; then
+      ARCH="$(echo $tarball | head -n1)"
+      echo "$DIR/$ARCH"
+    fi
   fi
 }
 
@@ -493,6 +498,8 @@ essentials () {
   if [ ! $path_to_tarball ]; then
     confirm_internet_connection
   fi
+
+  
 }
 
 main () {
