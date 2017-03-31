@@ -336,7 +336,8 @@ have_arch () {
       fi
     fi
   else
-    tarball="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"    if [ $tarball ]; then
+    tarball="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"
+    if [ $tarball ]; then
       ARCH="$(echo $tarball | head -n1)"
       echo "$DIR/$ARCH"
     fi
