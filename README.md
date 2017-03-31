@@ -4,17 +4,57 @@ A robust shell script (bash / sh) that automates the installation of an Arch Lin
 
 Confirmed devices:
     
-   Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
+   * Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
     
-Upcomming Devices:
-    
-   (check out the asus branch for more info)  
-    
-   Asus Flip C100P https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
-   
-   Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/   
+Unconfirmed Devices:
 
-This script automates the install instructions found here: https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook
+   if you try the script for one of these devices, and it works, please let me know which chromebook it worked for, so i can add it to confimed devices. thank you.
+
+   * HP Chromebook 11 G1 https://goo.gl/GA02tj
+
+   * HP Chromebook 11 G2 http://h20564.www2.hp.com/hpsc/doc/public/display?docId=emr_na-c04316411
+
+   * Samsung Chromebook 2 11" https://www.amazon.com/Samsung-Chromebook-Laptop-Exynos-Black/dp/B00J49ZH6K
+
+   * Samsung Chromebook 2 13" http://www.samsung.com/us/business/computing/chrome-devices/XE503C32-K01US
+
+   * and possibly other Chromebooks with the Exynos ARM Processor
+
+
+
+   * Asus Flip C100PA https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/
+
+   * Asus C201 https://www.asus.com/Notebooks/ASUS_Chromebook_C201/
+
+   * AOpen Chromebase Mini http://www.aopen.com/us/chrome-mini-products
+
+   * Asus Chromebit CS10 http://www.aopen.com/us/chrome-mini-products
+
+   * Hisense Chromebook C11 https://www.engadget.com/products/hisense/chromebook/specs/
+
+   * and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
+
+
+
+Upcomming Devices:
+
+   * Acer Chromebook R13 https://www.acer.com/ac/en/US/content/series/acerchromebookr13
+   
+   * Samsung Chromebook Plus http://www.samsung.com/us/computing/chromebooks/12-14/xe513c24-k01us-xe513c24-k01us/
+   
+   
+   
+Possible Future Upcomming Devices:
+   
+   * Acer Chromebase https://goo.gl/9MVg8o
+   
+   * Acer Chromebook 13 (CB5-311) https://www.acer.com/ac/en/US/content/model/NX.MPRAA.013
+   
+   * HP Chromebook 14 G3 http://support.hp.com/us-en/product/hp-chromebook-14-g3/7096564/manuals
+   
+   
+
+This script automates the install instructions found here: https://archlinuxarm.org/
    
 To install Arch Linux ARM on a SDcard / USB drive:
 
