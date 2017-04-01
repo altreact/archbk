@@ -95,7 +95,7 @@ EOF
   echo
   echo "$step) creating kernel partition on target device"
   step="$(expr $step + 1)"
-  cgpt add -i 1 -t kernel -b $KERNEL_BEGINNING_SECTOR -s 32768 -l $KERNEL_SIZE -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
+  cgpt add -i 1 -t kernel -b $KERNEL_BEGINNING_SECTOR -s $KERNEL_SIZE -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
   
   echo
   echo "$step) calculating how big to make the root partition on target device, using information from cgpt show"
@@ -473,14 +473,20 @@ have_arch () {
       
       if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
         alarm_codename='peach'
-        KERNEL_SIZE='32768'
+	arm='armv7'
         echo $alarm_codename
       elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
         alarm_codename='veyron'
-        KERNEL_SIZE='32768'
+	arm='armv7'
         echo $alarm_codename
       fi
     fi 
+  fi
+
+  if [ $arm ]; then 
+    KERNEL_SIZE='32768'
+  else
+    KERNEL_SIZE='65536'
   fi
 
   KERNEL_BEGINNING_SECTOR='8192'
