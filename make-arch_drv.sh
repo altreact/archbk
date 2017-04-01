@@ -12,45 +12,86 @@ install_arch () {
 
     echo '#!/usr/bin/env bash
     
-    #while [ ! $root_passwd_change ];
-    #do
-      echo "enter new root password"
-      passwd root
+    while [ ! $root_passwd_changed ];
+    do
+      echo
+      read -sp "enter new root password: " a
+      echo
+      read -sp "re-enter new root password: " b
+      echo
+      if [ "$a" = "$b" ]; then
+        passwd root 1> /dev/null 2>&1 <<EOF
+        "$a"
+        "$a"
+EOF
+        echo "password change was successful"
+        root_passwd_changed=true
+      else
+        echo
+        echo "passwords did not match"
+      fi
+    done
 
-      read -p "enter a username for your user: " username 
-      useradd -m -G wheel -s /bin/bash $username
-      passwd $username
-   #done
- 
-      read -p "is your ssid hidden? [y/n]: " a
-    echo
-    if [ $a = "y" ]; then
+    read -p "enter a username for your user: " username 
+    useradd -m -G wheel -s /bin/bash $username
+    passwd $username
+
+    while [ ! $user_passwd_changed ];
+    do
       echo
-      read -p "enter hidden SSID: " a
-      ssid=$a
-      read -sp "enter password: " a
-      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
-      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
-      netctl enable network && netctl start network
-    else
-      wifi-menu -o
-    fi
+      read -sp "enter password for $username: " a
+      echo
+      read -sp "re-enter password $username: " b
+      echo
+      if [ "$a" = "$b" ]; then
+        passwd $username 1> /dev/null 2>&1 <<EOF
+        "$a"
+        "$a"
+EOF
+        echo "password for $username has been set"
+        root_passwd_changed=true
+      else
+        echo
+        echo "passwords did not match"
+      fi
+    done
+
+    while [ ! $connected_to_internet ];
+    do
+
+	    read -p "is your ssid hidden? [y/n]: " a
+ 	   
+ 	    if [ $a = "y" ]; then
+ 	 		  echo
+        read -p "enter hidden SSID: " a
+	      ssid=$a
+ 	      read -sp "enter password: " a
+ 	      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
+ 	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
+ 	      netctl enable network && netctl start network
+   
+      else
+        wifi-menu -o
+      fi
     
-    c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"
-    if [ $c ]; then
-      echo
-      echo "you are now connected to the internet"
-      echo
-      echo "adding your new user to sudoers"
-      pacman -S sudo vboot-utils --noconfirm
-      echo "$username ALL=(ALL) ALL" >> /etc/sudoers
-      crossystem dev_boot_usb=1 dev_boot_signed_only=0
-    else
-      echo
-      echo "ssid and / or passphrase are invalid."
-      exit 1
-    fi
-     
+      c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"
+      if [ $c ]; then
+        echo
+        echo "you are now connected to the internet"
+        echo
+        echo "adding your new user to sudoers"
+        pacman -S sudo vboot-utils --noconfirm
+        echo "$username ALL=(ALL) ALL" >> /etc/sudoers
+        crossystem dev_boot_usb=1 dev_boot_signed_only=0
+        connected_to_internet=true
+      else
+        echo
+        echo "ssid and / or passphrase are invalid."
+        exit 1
+      fi
+
+    done
+
     echo
     read -p "do you plan on installing Arch Linux ARM to the internal flash memory? [y/n]: " a
      
@@ -71,7 +112,9 @@ install_arch () {
         fi
       fi
       read -p 'the system will now reboot. login as your newly created user to continue' a
-      reboot" >> helper
+      sed -i 's/sh helper.sh//' .bashrc
+			reboot
+			" >> helper
   }
 
   step=1
@@ -483,7 +526,7 @@ have_tarball() {
       arm='armv7'
       echo $alarm_codename
     else
-      echo 'not enough info is available to contiue'
+      echo 'not enough info is available to continue'
       echo 'run this script in ChromeOS'
       exit 1
     fi
