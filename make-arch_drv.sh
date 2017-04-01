@@ -12,14 +12,17 @@ install_arch () {
 
     echo '#!/usr/bin/env bash
     
-    echo "enter new root password"
-    passwd root
+    #while [ ! $root_passwd_change ];
+    #do
+      echo "enter new root password"
+      passwd root
 
-    read -p "enter a username for your user: " username 
-    useradd -m -G wheel -s /bin/bash $username
-    passwd $username
-    
-    read -p "is your ssid hidden? [y/n]: " a
+      read -p "enter a username for your user: " username 
+      useradd -m -G wheel -s /bin/bash $username
+      passwd $username
+   #done
+ 
+      read -p "is your ssid hidden? [y/n]: " a
     echo
     if [ $a = "y" ]; then
       echo
