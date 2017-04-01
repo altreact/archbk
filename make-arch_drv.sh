@@ -49,7 +49,7 @@ EOF
         "$a"
 EOF
         echo "password for $username has been set"
-        root_passwd_changed=true
+        user_passwd_changed=true
       else
         echo
         echo "passwords did not match"
