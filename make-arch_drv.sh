@@ -113,8 +113,8 @@ EOF
       fi
       read -p 'the system will now reboot. login as your newly created user to continue' a
       sed -i 's/sh helper.sh//' .bashrc
-			reboot
-			" >> helper
+      reboot
+      " >> helper
   }
 
   step=1
@@ -201,8 +201,10 @@ EOF
   
   # creates helper script that initiates / automates internet connection
   # moves script to root/ user's directory
+  # set script to run at root login
   helper_script
   mv helper root/root/helper.sh
+  echo 'sh helper.sh' >> root/root/.bashrc
   
   echo
   echo "$step) writing kernel image to target device kernel partition"
