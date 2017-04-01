@@ -108,7 +108,7 @@ EOF
   echo
   echo "$step) creating root partition on target device"
   step="$(expr $step + 1)"
-  add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SIZE -s $DEVICE_SIZE -l Root /dev/$media")"
+  add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SECTOR -s $DEVICE_SIZE -l Root /dev/$media")"
   
   eval $add_root_partition 1> /dev/null
 
@@ -379,7 +379,7 @@ essentials () {
   manual_drive_selection () {
 
     release="$(cat /etc/lsb-release 2> /dev/null | head -n1 | sed 's/[_].*$//')"
-    chromeos_root_dev="$(lsblk 2> /dev/null | grep /mnt/stateful_partition | tail -n1 | sed 's/part[ ]*\/mnt\/stateful_partition//g' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/p[0-9]//')"
+    chromeos_root_dev="$(lsblk 2> /dev/null | grep ' /mnt/stateful_partition' | tail -n1 | sed 's/part[ ]*\/mnt\/stateful_partition//g' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/p[0-9]//')"
     root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/[p].*//')"
     here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
       
@@ -403,14 +403,12 @@ essentials () {
   }
 
 # gives user the option to skip download, if arch linux arm tarball is detected
-have_arch () {
+have_tarball() {
   # if Arch Linux tarball is found
     
   ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null | head -n1)"
 
   if [ -e $ARCH ]; then
-
-    alarm_codename="$(echo $ARCH | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
       
     # ask user if they want to skip download of new tarball
     echo 1>&2
@@ -421,7 +419,7 @@ have_arch () {
     if [ $a ]; then
       if [ $a = 'y' ]; then
         echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
-        echo "$DIR/$ARCH"
+        echo "$ARCH"
       else
         echo 1>&2
         echo "Arch Linux ARM will be downloaded" 1>&2
@@ -429,6 +427,8 @@ have_arch () {
     fi
   fi
 }
+
+  ALARM='Arch Linux ARM'
 
   if [ $1 ]; then
     target_dev="$(manual_drive_selection $1 $2)"
@@ -455,32 +455,36 @@ have_arch () {
     rm fail.res
     exit 1
   fi
-
- # check for previously used ALARM tarball
- path_to_tarball="$(have_arch)"
-  
+ 
   # if no ALARM tarball is found
   # check for internet connection for tarball download
   # parse chromeOS firmware info to identify the chromebook
   # determin the ALARM codename, based on chromeOS firmeare parse
   if [ ! $path_to_tarball ]; then
     confirm_internet_connection
-
-  chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
-
-    if [ $chr_codename ]; then
-      
-      if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
-        alarm_codename='peach'
-	arm='armv7'
-        echo $alarm_codename
-      elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
-        alarm_codename='veyron'
-	arm='armv7'
-        echo $alarm_codename
-      fi
-    fi 
+    chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
   fi
+
+  # check for previously used ALARM tarball
+  tarball="$(have_tarball)"
+  alarm_codename="$(echo $tarball | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
+
+  if [ $chr_codename ]; then
+      
+    if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
+      alarm_codename='peach'
+      arm='armv7'
+      echo $alarm_codename
+    elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
+      alarm_codename='veyron'
+      arm='armv7'
+      echo $alarm_codename
+    else
+      echo 'not enough info is available to contiue'
+      echo 'run this script in ChromeOS'
+      exit 1
+    fi
+  fi 
 
   if [ $arm ]; then 
     KERNEL_SIZE='32768'
@@ -492,10 +496,8 @@ have_arch () {
   # get the name of this script
   SCRIPTNAME=`basename "$0"`
   DIR="$(pwd)"
-  ARCH="ArchLinuxARM-"$alarm_codename"-latest.tar.gz"
-  ALARM='Arch Linux ARM'
- 
-  
+  ARCH="ArchLinuxARM-"$alarm_codename"-latest.tar.gz" 
+  path_to_tarball="$DIR/$tarball"  
 }
 
 main () {
