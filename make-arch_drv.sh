@@ -406,12 +406,11 @@ essentials () {
 have_arch () {
   # if Arch Linux tarball is found
     
-  ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null)"
+  ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null | head -n1)"
 
   if [ -e $ARCH ]; then
 
-    ARCH="$(echo $tarball | head -n1)"
-    alarm_codename="$(echo $tarball | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
+    alarm_codename="$(echo $ARCH | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
       
     # ask user if they want to skip download of new tarball
     echo 1>&2
