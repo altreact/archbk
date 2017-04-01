@@ -34,7 +34,6 @@ EOF
 
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
-    passwd $username
 
     while [ ! $user_passwd_changed ];
     do
