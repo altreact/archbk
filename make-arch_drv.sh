@@ -108,7 +108,7 @@ EOF
   echo
   echo "$step) creating root partition on target device"
   step="$(expr $step + 1)"
-  add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SECTOR -s $DEVICE_SIZE -l Root /dev/$media")"
+  add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SECTOR -s $P2_SIZE -l Root /dev/$media")"
   
   eval $add_root_partition 1> /dev/null
 
