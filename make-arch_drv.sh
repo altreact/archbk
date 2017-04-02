@@ -100,13 +100,12 @@ EOF
       read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
     	echo
     	if [ $a = "y" ]; then 
-				sh $SCRIPTNAME mmcblk0' > helper
+	  sh $SCRIPTNAME mmcblk0' > helper
 				
-		echo "
-    	fi
-		fi
+    echo "      fi
+    fi
 
-		read -p "the system will now reboot. login as your newly created user to continue" a
+    read -p "the system will now reboot. login as your newly created user to continue" a
     sed -i "s/sh helper.sh//" .bashrc
     reboot" >> helper
 
