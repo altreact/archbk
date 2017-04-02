@@ -69,7 +69,7 @@ EOF
 				echo
  	      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
  	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
- 	      netctl enable network && netctl start network
+ 	      netctl start network
       else
         wifi-menu -o
       fi
@@ -83,9 +83,10 @@ EOF
         pacman -S sudo vboot-utils cgpt wget --noconfirm
         echo "$username ALL=\(ALL\) ALL" >> /etc/sudoers
         crossystem dev_boot_usb=1 dev_boot_signed_only=0
+				netctl enable network 2> /dev/null
+        netctl disable networ
         connected_to_internet=true
       else
-        netctl disable network
 				rm /etc/netctl/network 2> /dev/null
         echo
         echo "ssid and / or passphrase are invalid."
