@@ -84,7 +84,7 @@ EOF
         echo "$username ALL=\(ALL\) ALL" >> /etc/sudoers
         crossystem dev_boot_usb=1 dev_boot_signed_only=0
 				netctl enable network 2> /dev/null
-        netctl disable networ
+        netctl disable network
         connected_to_internet=true
       else
 				rm /etc/netctl/network 2> /dev/null
