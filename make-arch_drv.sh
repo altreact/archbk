@@ -10,7 +10,7 @@ install_arch () {
   # gives option to install Arch Linux ARM to internal flash memory
   helper_script() {
 
-    echo '#!/usr/bin/env bash
+    echo 'usr/bin/env bash
     
     while [ ! $root_passwd_changed ];
     do
@@ -32,6 +32,7 @@ EOF
       fi
     done
 
+		echo
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
 
@@ -57,7 +58,7 @@ EOF
 
     while [ ! $connected_to_internet ];
     do
-
+			echo
 	    read -p "is your ssid hidden? [y/n]: " a
  	   
  	    if [ $a = "y" ]; then
@@ -65,10 +66,10 @@ EOF
         read -p "enter hidden SSID: " a
 	      ssid=$a
  	      read -sp "enter password: " a
+				echo
  	      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
  	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
  	      netctl enable network && netctl start network
-   
       else
         wifi-menu -o
       fi
@@ -79,52 +80,57 @@ EOF
         echo "you are now connected to the internet"
         echo
         echo "adding your new user to sudoers"
-        pacman -S sudo vboot-utils --noconfirm
-        echo "$username ALL=(ALL) ALL" >> /etc/sudoers
+        pacman -S sudo vboot-utils cgpt wget --noconfirm
+        echo "$username ALL=\(ALL\) ALL" >> /etc/sudoers
         crossystem dev_boot_usb=1 dev_boot_signed_only=0
         connected_to_internet=true
       else
+        netctl disable network
+				rm /etc/netctl/network 2> /dev/null
         echo
         echo "ssid and / or passphrase are invalid."
-        exit 1
       fi
-
     done
+   
+    root_dev="$(lsblk 2> /dev/null | grep "[/]$" | sed "s/[0-9a-z]*//" | sed "s/[^0-9a-z]*[ ].*//" | sed "s/[^0-9a-z]*//g" | sed "s/[p].*//")"
 
-    echo
-    read -p "do you plan on installing Arch Linux ARM to the internal flash memory? [y/n]: " a
-     
-    if [ $a = "y" ]; then
-      echo
-      echo "installing necessary programs"
-      echo
-      pacman -S cgpt wget --noconfirm
-     
-      echo
-      read -p "install Arch Linux ARM to internal flash memory now? [y/n]: " a
-      echo
-           
-      if [ $a = "y" ]; then 
-        echo' > helper
-     
-      echo "      sh $SCRIPTNAME mmcblk0
-        fi
-      fi
-      read -p 'the system will now reboot. login as your newly created user to continue' a
-      sed -i 's/sh helper.sh//' .bashrc
-      reboot
-      " >> helper
+    if [ $root_dev != "mmcblk0" ]; then
+    	echo
+      read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
+    	echo
+    	if [ $a = "y" ]; then 
+				sh $SCRIPTNAME mmcblk0' > helper
+				
+		echo "
+    	fi
+		fi
+
+		read -p "the system will now reboot. login as your newly created user to continue" a
+    sed -i "s/sh helper.sh//" .bashrc
+    reboot" >> helper
+
+  }
+
+  spinner()
+  {
+    local pid=$1
+    local delay=0.50
+    local spinstr='|/-\'
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+      local temp=${spinstr#?}
+      printf "%c" "$spinstr"
+      local spinstr=$temp${spinstr%"$temp"}
+      sleep $delay
+      printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
   }
 
   step=1
 
-  echo
   # enabling USB booting && booting of operating systems that aren't signed by google
   crossystem dev_boot_usb=1 dev_boot_signed_only=0 2> /dev/null
 
-  echo
-  echo "$step) unmounting target device"
-  step="$(expr $step + 1)"
   umount /dev/$media* 2> /dev/null
   
   fdisk /dev/$media 1> /dev/null <<EOF
@@ -132,19 +138,10 @@ EOF
   w
 EOF
   
-  echo
-  echo "$step) creating GPT partition table with fdisk"
-  step="$(expr $step + 1)"
   cgpt create /dev/$media 1> /dev/null
   
-  echo
-  echo "$step) creating kernel partition on target device"
-  step="$(expr $step + 1)"
   cgpt add -i 1 -t kernel -b $KERNEL_BEGINNING_SECTOR -s $KERNEL_SIZE -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
   
-  echo
-  echo "$step) calculating how big to make the root partition on target device, using information from cgpt show"
-  step="$(expr $step + 1)"
   DEVICE_SIZE="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
 
   P2_BEGINNING_SECTOR="$(expr $KERNEL_BEGINNING_SECTOR + $KERNEL_SIZE)"
@@ -155,21 +152,14 @@ EOF
   step="$(expr $step + 1)"
   add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SECTOR -s $P2_SIZE -l Root /dev/$media")"
   
-  eval $add_root_partition 1> /dev/null
+	(eval $add_root_partition 1> /dev/null) &
+  spinner $!
 
-  echo
-  echo "$step) refreshing what the system knows about the partitions on target device"
-  step="$(expr $step + 1)"
   partx -a "/dev/$media" 1> /dev/null 2>&1
   
-  echo
-  echo "$step) formating target device root partition as ext4"
-  step="$(expr $step + 1)"
-  mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1
+	(mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1) &
+	spinner $!
   
-  echo
-  echo "$step) moving to working directory"
-  step="$(expr $step + 1)"
   cd /tmp && mkdir arch_tmp 2> /dev/null && cd arch_tmp
   
   if [ ! $path_to_tarball ]; then
@@ -181,21 +171,20 @@ EOF
     path_to_tarball="$ARCH"
   fi
   
-  echo
-  echo "$step) mounting root partition"
-  step="$(expr $step + 1)"
   mkdir root 2> /dev/null 1>&2
   mount /dev/$p2 root/
   
   echo
   echo "$step) extracting rootfs to target device root partition"
   step="$(expr $step + 1)"
-  tar -xf $path_to_tarball -C root/ 2> /dev/null
+	(tar -xf $path_to_tarball -C root/ 2> /dev/null) &
+	spinner $!
   
   # moves script and tarball into /root of target
   # enables one to run script again from ne arch install
   # see README.md for more info
-  cp $path_to_tarball root/root/$ARCH
+	(cp $path_to_tarball root/root/$ARCH) &
+	spinner $!
   cp $DIR/$SCRIPTNAME root/root/$SCRIPTNAME
   
   # creates helper script that initiates / automates internet connection
@@ -208,26 +197,26 @@ EOF
   echo
   echo "$step) writing kernel image to target device kernel partition"
   step="$(expr $step + 1)"
-  dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1
+	(dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1) &
+	spinner $!
   
   echo
   echo "$step) unmounting target device"
   step="$(expr $step + 1)"
-  umount root
+	(umount root) &
+	spinner $!
 
-  echo
-  echo "$step) syncing"
-  step="$(expr $step + 1)"
-  sync
+	(sync) &
+	spinner $!
   
   echo
   echo "installation finished!"
   echo
-  if [ ! -e "$DIR/$ARCH" ]; then
+  if [ -e $ARCH ]; then
     read -p "would you like to keep $ARCH for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
-      mv $ARCH $DIR/$ARCH
-      
+			(mv $ARCH $DIR/$ARCH) &
+      spinner $!  
     fi
   fi
   
@@ -502,34 +491,31 @@ have_tarball() {
     rm fail.res
     exit 1
   fi
- 
-  # if no ALARM tarball is found
-  # check for internet connection for tarball download
-  # parse chromeOS firmware info to identify the chromebook
-  # determin the ALARM codename, based on chromeOS firmeare parse
-  if [ ! $path_to_tarball ]; then
-    confirm_internet_connection
-    chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
-  fi
 
   # check for previously used ALARM tarball
   tarball="$(have_tarball)"
-  alarm_codename="$(echo $tarball | sed 's/^ArchLinuxARM-[^.*]-latest.tar.gz$//')"
+  alarm_codename="$(echo $tarball | sed 's/ArchLinuxARM-//' | sed 's/-latest.tar.gz//')"
 
   if [ $chr_codename ]; then
-      
     if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
       alarm_codename='peach'
       arm='armv7'
-      echo $alarm_codename
     elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
       alarm_codename='veyron'
       arm='armv7'
-      echo $alarm_codename
     else
       echo 'not enough info is available to continue'
       echo 'run this script in ChromeOS'
       exit 1
+    fi
+	else
+	  # if no ALARM tarball is found
+    # check for internet connection for tarball download
+    # parse chromeOS firmware info to identify the chromebook
+    # determin the ALARM codename, based on chromeOS firmeare parse
+    if [ ! $path_to_tarball ]; then
+      confirm_internet_connection
+      chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
     fi
   fi 
 
