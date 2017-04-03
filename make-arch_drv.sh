@@ -66,14 +66,20 @@ install_arch () {
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
     	echo
-    	if [ $a = "y" ]; then ' > helper
+    	
+			if [ $a = "y" ]; then ' > helper
 
 		echo "		sh $SCRIPTNAME mmcblk0" >> helper
     echo '		
     	fi
 		fi
+    	if [ $a = "y" ]; then 
+	  sh $SCRIPTNAME mmcblk0' > helper
+				
+    echo "      fi
+    fi
 
-		read -p "the system will now reboot. login as your newly created user to continue" a
+    read -p "the system will now reboot. login as your newly created user to continue" a
     sed -i "s/sh helper.sh//" .bashrc
     reboot' >> helper
 
