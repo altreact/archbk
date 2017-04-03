@@ -71,12 +71,7 @@ install_arch () {
 
 		echo "		sh $SCRIPTNAME mmcblk0" >> helper
     echo '		
-    	fi
-		fi
-    	if [ $a = "y" ]; then 
-	  sh $SCRIPTNAME mmcblk0' > helper
-				
-    echo '      fi
+      fi
     fi
 
     read -p "the system will now reboot. login as your newly created user to continue" a
