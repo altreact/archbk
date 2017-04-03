@@ -12,49 +12,16 @@ install_arch () {
 
     echo 'usr/bin/env bash
     
-    while [ ! $root_passwd_changed ];
-    do
-      echo
-      read -sp "enter new root password: " a
-      echo
-      read -sp "re-enter new root password: " b
-      echo
-      if [ "$a" = "$b" ]; then
-        passwd root 1> /dev/null 2>&1 <<EOF
-        "$a"
-        "$a"
-EOF
-        echo "password change was successful"
-        root_passwd_changed=true
-      else
-        echo
-        echo "passwords did not match"
-      fi
-    done
+    echo
+    echo "re-enter new root password: "
+    passwd root 
 
 		echo
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
-
-    while [ ! $user_passwd_changed ];
-    do
-      echo
-      read -sp "enter password for $username: " a
-      echo
-      read -sp "re-enter password $username: " b
-      echo
-      if [ "$a" = "$b" ]; then
-        passwd $username 1> /dev/null 2>&1 <<EOF
-        "$a"
-        "$a"
-EOF
-        echo "password for $username has been set"
-        user_passwd_changed=true
-      else
-        echo
-        echo "passwords did not match"
-      fi
-    done
+    
+    echo
+    passwd $username
 
     while [ ! $connected_to_internet ];
     do
@@ -84,7 +51,7 @@ EOF
         echo "$username ALL=\(ALL\) ALL" >> /etc/sudoers
         crossystem dev_boot_usb=1 dev_boot_signed_only=0
 				netctl enable network 2> /dev/null
-        netctl disable network
+        netctl disable network 2> /dev/null
         connected_to_internet=true
       else
 				rm /etc/netctl/network 2> /dev/null
@@ -99,16 +66,16 @@ EOF
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
     	echo
-    	if [ $a = "y" ]; then 
-				sh $SCRIPTNAME mmcblk0' > helper
-				
-		echo "
+    	if [ $a = "y" ]; then ' > helper
+
+		echo "		sh $SCRIPTNAME mmcblk0" >> helper
+    echo '		
     	fi
 		fi
 
 		read -p "the system will now reboot. login as your newly created user to continue" a
     sed -i "s/sh helper.sh//" .bashrc
-    reboot" >> helper
+    reboot' >> helper
 
   }
 
@@ -124,7 +91,7 @@ EOF
       sleep $delay
       printf "\b\b\b\b\b\b"
     done
-    printf "    \b\b\b\b"
+    printf " \b\b\b\b"
   }
 
   step=1
@@ -386,7 +353,7 @@ confirm_internet_connection () {
         echo " "                                                                 1>&2
         echo "#################################################################" 1>&2
         echo " "                                                                 1>&2
-        echo "ArchLinuxARM-peach-latest.tar.gz was not found in this directory," 1>&2
+        echo "    Arch Linux ARM tarball was not found in this directory," 1>&2
         echo "   and cannot be downloaded without an internet connnection"       1>&2
         echo " "                                                                 1>&2
         echo "           connect to the internet and try again."                 1>&2
@@ -514,7 +481,7 @@ have_tarball() {
     # check for internet connection for tarball download
     # parse chromeOS firmware info to identify the chromebook
     # determin the ALARM codename, based on chromeOS firmeare parse
-    if [ ! $path_to_tarball ]; then
+    if [ ! $tarball ]; then
       confirm_internet_connection
       chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
     fi
