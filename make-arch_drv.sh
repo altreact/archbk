@@ -10,18 +10,39 @@ install_arch () {
   # gives option to install Arch Linux ARM to internal flash memory
   helper_script() {
 
-    echo 'usr/bin/env bash
-    
-    echo
-    echo "re-enter new root password: "
-    passwd root 
+    echo '#!/usr/bin/env bash
+
+		if [ "$(whoami)" != "root" ]; then
+			echo "this script must be ran as root"
+			echo
+			exit 1
+		fi
+
+    while [ ! $passwd_changed ]; 
+    do
+      echo
+      echo "enter new root password: "
+			echo
+      passwd root 
+      if [ $? -eq 0 ]; then 	
+		    passwd_changed=true
+	    fi
+    done
 
 		echo
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
     
-    echo
-    passwd $username
+    while [ ! $user_passwd_changed ]; 
+    do
+      echo
+      echo "re-enter new root password: "
+			echo
+      passwd $username 
+      if [ $? -eq 0 ]; then 	
+		    user_passwd_changed=true
+	    fi
+    done
 
     while [ ! $connected_to_internet ];
     do
