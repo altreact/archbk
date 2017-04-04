@@ -490,6 +490,7 @@ have_tarball() {
   tarball="$(have_tarball)"
   alarm_codename="$(echo $tarball | sed 's/ArchLinuxARM-//' | sed 's/-latest.tar.gz//')"
 
+	# map chromebook model to Arch Linux ARM codename to determine Arch Linux ARM tarball to use
   if [ $chr_codename ]; then
     if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
       alarm_codename='peach'
