@@ -12,37 +12,32 @@ install_arch () {
 
     echo '#!/usr/bin/env bash
 
+		pass_ver () {
+    	while [ true ]; 
+    	do
+      	echo
+      	echo "enter new password for $1"
+				echo
+      	passwd $1 
+      	if [ $? -eq 0 ]; then 	
+		    	break	
+	    	fi
+    	done
+		}
+
 		if [ "$(whoami)" != "root" ]; then
 			echo "this script must be ran as root"
 			echo
 			exit 1
 		fi
 
-    while [ ! $passwd_changed ]; 
-    do
-      echo
-      echo "enter new password for root"
-			echo
-      passwd root 
-      if [ $? -eq 0 ]; then 	
-		    passwd_changed=true
-	    fi
-    done
+		pass_ver root
 
 		echo
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
-    
-    while [ ! $user_passwd_changed ]; 
-    do
-      echo
-      echo "enter password for $username: "
-			echo
-      passwd $username 
-      if [ $? -eq 0 ]; then 	
-		    user_passwd_changed=true
-	    fi
-    done
+
+		pass_ver $username		
 
     while [ ! $connected_to_internet ];
     do
