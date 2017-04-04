@@ -65,13 +65,13 @@ install_arch () {
         echo
         echo "you are now connected to the internet"
         echo
-        echo "adding your new user to sudoers"
+        echo "adding $username to sudoers"
 				echo
         pacman -S sudo --noconfirm
         sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
         connected_to_internet=true
       else
-        if [ $hidden_ssid = "y" ]; then 
+        if [ $hidden_ssid = "y" 2> /dev/null ]; then 
 					netctl disable network 
 					rm /etc/netctl/network
 				fi
@@ -84,7 +84,7 @@ install_arch () {
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/N]: " a
 
-			if [ $a = "y" ]; then 
+			if [ $a = "y" 2> /dev/mull ]; then 
 				echo
       	pacman -S cgpt wget --noconfirm ' > helper
       	 		
