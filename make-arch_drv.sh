@@ -42,9 +42,9 @@ install_arch () {
     while [ ! $connected_to_internet ];
     do
 			echo
-	    read -p "is your ssid hidden? [y/n]: " a
+	    read -p "is your ssid hidden? [y/N]: " hidden_ssid
  	   
- 	    if [ $a = "y" ]; then
+      if [ $hidden_ssid == "y" ]; then 
  	 		  echo
         read -p "enter hidden SSID: " a
 	      ssid=$a
@@ -65,34 +65,39 @@ install_arch () {
         echo "you are now connected to the internet"
         echo
         echo "adding your new user to sudoers"
+				echo
         pacman -S sudo --noconfirm
+				echo
         sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
-        netctl disable network 2> /dev/null
-				rm /etc/netctl/network 2> /dev/null
         connected_to_internet=true
       else
-				rm /etc/netctl/network 2> /dev/null
+        if [ $hidden_ssid == "y" ]; then 
+					netctl disable network 2> /dev/null
+					rm /etc/netctl/network 2> /dev/null
+				fi
         echo
         echo "ssid and / or passphrase are invalid."
       fi
     done
-   
 
     if [ $root_dev != "mmcblk0" ]; then
     	echo
-      read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
-    	echo
+      read -p "install Arch Linux ARM to internal flash memory? [y/N]: " a
 
-      pacman -S vboot-utils cgpt wget --noconfirm
-      crossystem dev_boot_usb=1 dev_boot_signed_only=0
-
-			if [ $a = "y" ]; then ' > helper
-
+			if [ $a = "y" ]; then 
+				echo
+      	pacman -S cgpt wget --noconfirm ' > helper
+      	 		
 		echo "		sh $SCRIPTNAME mmcblk0" >> helper
+
     echo '		
       fi
-    fi
+		else
+			pacman -S vboot-utils
+			crossystem dev_boot_usb=1 dev_boot_signed_only=0
+		fi
 
+    echo
     read -p "the system will now reboot. login as your newly created user to continue" a
     sed -i "s/sh helper.sh//" .bashrc
     reboot' >> helper
@@ -102,7 +107,7 @@ install_arch () {
   spinner()
   {
     local pid=$1
-    local delay=0.50
+    local delay=0.25
     local spinstr='|/-\'
     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
       local temp=${spinstr#?}
@@ -220,13 +225,13 @@ EOF
     echo "drives will not boot from the blue USB 3.0 port"
     echo "remember to plug drive into black USB 2.0 port to boot from it "
     echo
-    read -p "poweroff this device now? [y/n] : " b
+    read -p "poweroff this device now? [y/N] : " b
     echo
     if [ $b = 'y' ]; then
       poweroff
     fi
   else
-    read -p "reboot now? [y/n] : " c
+    read -p "reboot now? [y/N] : " c
     echo
     if [  $c = 'y' ]; then
       reboot
@@ -332,7 +337,7 @@ find_target_device () {
   echo "and Arch Linux ARM will be installed on this device." 1>&2
   echo 1>&2
   echo 1>&2
-  read -p "do you want to continue with this install? [y/n] : " a
+  read -p "do you want to continue with this install? [y/N] : " a
   if [ $a ]; then
     if [ $a = 'n' ]; then
       exit 1
@@ -438,7 +443,7 @@ have_tarball() {
     echo 1>&2
     echo "\"$ARCH\" was found" 1>&2
     echo 1>&2
-    read -p "install $ALARM without re-downloading? [y/n] : " a
+    read -p "install $ALARM without re-downloading? [y/N] : " a
     echo 1>&2
     if [ $a ]; then
       if [ $a = 'y' ]; then
