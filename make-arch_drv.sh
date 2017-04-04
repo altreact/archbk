@@ -44,7 +44,7 @@ install_arch () {
 			echo
 	    read -p "is your ssid hidden? [y/N]: " hidden_ssid
  	   
-      if [ $hidden_ssid = "y" ]; then 
+      if [ $hidden_ssid = "y" 2> /dev/null]; then 
  	 		  echo
         read -p "enter hidden SSID: " a
 	      ssid=$a
