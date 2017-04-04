@@ -34,15 +34,10 @@ Unconfirmed Devices:
 
    * and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
 
-
-
-Upcomming Devices:
-
    * Acer Chromebook R13 https://www.acer.com/ac/en/US/content/series/acerchromebookr13
    
    * Samsung Chromebook Plus http://www.samsung.com/us/computing/chromebooks/12-14/xe513c24-k01us-xe513c24-k01us/
-   
-   
+
    
 Possible Future Upcomming Devices:
    
