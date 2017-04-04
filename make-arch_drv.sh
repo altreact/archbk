@@ -71,7 +71,7 @@ install_arch () {
         echo
         echo "adding your new user to sudoers"
         pacman -S sudo --noconfirm
-        sed "80i $username ALL=(ALL) ALL" /etc/sudoers
+        sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
         netctl disable network 2> /dev/null
 				rm /etc/netctl/network 2> /dev/null
         connected_to_internet=true
