@@ -491,12 +491,16 @@ have_tarball() {
   alarm_codename="$(echo $tarball | sed 's/ArchLinuxARM-//' | sed 's/-latest.tar.gz//')"
 
   if [ $chr_codename ]; then
-    if [ "$(echo "$chr_codename" | grep 'daisy')"  ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
+    if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
       alarm_codename='peach'
-      arm='armv7'
-    elif [ "$(echo "$chr_codename" | grep 'veyron')"  ]; then
+      armhf='armv7'
+    elif [ "$(echo "$chr_codename" | grep 'veyron')" ]; then
       alarm_codename='veyron'
-      arm='armv7'
+      armhf='armv7'
+    elif [ "$(echo "$chr_codename" | grep 'kevin')" ] || [ "$(echo "$chr_codename" | grep 'gru')" ]; then
+      alarm_codename='gru'
+    elif [ "$(echo "$chr_codename" | grep 'elm')" ] || [ "$(echo "$chr_codename" | grep 'oak')" ]; then
+      alarm_codename='oak'
     else
       echo 'not enough info is available to continue'
       echo 'run this script in ChromeOS'
@@ -513,7 +517,7 @@ have_tarball() {
     fi
   fi 
 
-  if [ $arm ]; then 
+  if [ $armhf ]; then 
     KERNEL_SIZE='32768'
   else
     KERNEL_SIZE='65536'
