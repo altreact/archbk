@@ -67,13 +67,12 @@ install_arch () {
         echo "adding your new user to sudoers"
 				echo
         pacman -S sudo --noconfirm
-				echo
         sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
         connected_to_internet=true
       else
         if [ $hidden_ssid == "y" ]; then 
-					netctl disable network 2> /dev/null
-					rm /etc/netctl/network 2> /dev/null
+					netctl disable network 
+					rm /etc/netctl/network
 				fi
         echo
         echo "ssid and / or passphrase are invalid."
@@ -84,7 +83,7 @@ install_arch () {
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/N]: " a
 
-			if [ $a = "y" ]; then 
+			if [ $a == "y" ]; then 
 				echo
       	pacman -S cgpt wget --noconfirm ' > helper
       	 		
@@ -93,6 +92,7 @@ install_arch () {
     echo '		
       fi
 		else
+			echo
 			pacman -S vboot-utils
 			crossystem dev_boot_usb=1 dev_boot_signed_only=0
 		fi
