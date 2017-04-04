@@ -21,7 +21,7 @@ install_arch () {
     while [ ! $passwd_changed ]; 
     do
       echo
-      echo "enter new root password: "
+      echo "enter new password for root"
 			echo
       passwd root 
       if [ $? -eq 0 ]; then 	
@@ -36,7 +36,7 @@ install_arch () {
     while [ ! $user_passwd_changed ]; 
     do
       echo
-      echo "re-enter new root password: "
+      echo "enter password for $username: "
 			echo
       passwd $username 
       if [ $? -eq 0 ]; then 	
@@ -57,22 +57,23 @@ install_arch () {
 				echo
  	      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
  	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
- 	      netctl start network
+				netctl enable network && netctl start network 
       else
         wifi-menu -o
       fi
-    
+
+      root_dev="$(lsblk 2> /dev/null | grep "[/]$" | sed "s/[0-9a-z]*//" | sed "s/[^0-9a-z]*[ ].*//" | sed "s/[^0-9a-z]*//g" | sed "s/[p].*//")"
+
       c="$(ping -c 1 google.com 2>/dev/null | head -1 | sed "s/[ ].*//")"
       if [ $c ]; then
         echo
         echo "you are now connected to the internet"
         echo
         echo "adding your new user to sudoers"
-        pacman -S sudo vboot-utils cgpt wget --noconfirm
-        echo "$username ALL=\(ALL\) ALL" >> /etc/sudoers
-        crossystem dev_boot_usb=1 dev_boot_signed_only=0
-				netctl enable network 2> /dev/null
+        pacman -S sudo --noconfirm
+        sed "80i $username ALL=(ALL) ALL" /etc/sudoers
         netctl disable network 2> /dev/null
+				rm /etc/netctl/network 2> /dev/null
         connected_to_internet=true
       else
 				rm /etc/netctl/network 2> /dev/null
@@ -81,13 +82,15 @@ install_arch () {
       fi
     done
    
-    root_dev="$(lsblk 2> /dev/null | grep "[/]$" | sed "s/[0-9a-z]*//" | sed "s/[^0-9a-z]*[ ].*//" | sed "s/[^0-9a-z]*//g" | sed "s/[p].*//")"
 
     if [ $root_dev != "mmcblk0" ]; then
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/n]: " a
     	echo
-    	
+
+      pacman -S vboot-utils cgpt wget --noconfirm
+      crossystem dev_boot_usb=1 dev_boot_signed_only=0
+
 			if [ $a = "y" ]; then ' > helper
 
 		echo "		sh $SCRIPTNAME mmcblk0" >> helper
