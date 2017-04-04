@@ -54,6 +54,7 @@ install_arch () {
  	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
 				netctl enable network && netctl start network 
       else
+				echo
         wifi-menu -o
       fi
 
