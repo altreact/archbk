@@ -44,7 +44,7 @@ install_arch () {
 			echo
 	    read -p "is your ssid hidden? [y/N]: " hidden_ssid
  	   
-      if [ $hidden_ssid == "y" ]; then 
+      if [ $hidden_ssid = "y" ]; then 
  	 		  echo
         read -p "enter hidden SSID: " a
 	      ssid=$a
@@ -71,7 +71,7 @@ install_arch () {
         sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
         connected_to_internet=true
       else
-        if [ $hidden_ssid == "y" ]; then 
+        if [ $hidden_ssid = "y" ]; then 
 					netctl disable network 
 					rm /etc/netctl/network
 				fi
@@ -84,7 +84,7 @@ install_arch () {
     	echo
       read -p "install Arch Linux ARM to internal flash memory? [y/N]: " a
 
-			if [ $a == "y" ]; then 
+			if [ $a = "y" ]; then 
 				echo
       	pacman -S cgpt wget --noconfirm ' > helper
       	 		
