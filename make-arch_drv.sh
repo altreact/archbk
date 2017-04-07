@@ -228,7 +228,7 @@ EOF
     echo
     read -p "poweroff this device now? [y/N] : " b
     echo
-    if [ $b = 'y' ]; then
+    if [ $b = 'y' 2> /dev/null ]; then
       poweroff
     fi
   else
