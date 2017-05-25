@@ -404,7 +404,13 @@ confirm_internet_connection () {
 # looks for install tarball in current directory, sets path to tarball, if found
 # checks for internet connection, if needed
 essentials () {
-  
+ 
+  # if script is not ran as root, exit 
+  if [ "$(whoami)" != "root" ]; then
+    echo "this script must be ran as root"
+    echo
+    exit 1
+  fi
   # idiot-proofs manual drive selection
   manual_drive_selection () {
 
@@ -432,31 +438,31 @@ essentials () {
     fi
   }
 
-# gives user the option to skip download, if arch linux arm tarball is detected
-have_tarball() {
-  # if Arch Linux tarball is found
-    
-  ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null | head -n1)"
-
-  if [ $ARCH ]; then
+  # gives user the option to skip download, if arch linux arm tarball is detected
+  have_tarball() {
+    # if Arch Linux tarball is found
       
-    # ask user if they want to skip download of new tarball
-    echo 1>&2
-    echo "\"$ARCH\" was found" 1>&2
-    echo 1>&2
-    read -p "install $ALARM without re-downloading? [y/N] : " a
-    echo 1>&2
-    if [ $a ]; then
-      if [ $a = 'y' ]; then
-        echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
-        echo "$ARCH"
-      else
-        echo 1>&2
-        echo "Arch Linux ARM will be downloaded" 1>&2
+    ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null | head -n1)"
+
+    if [ $ARCH ]; then
+        
+      # ask user if they want to skip download of new tarball
+      echo 1>&2
+      echo "\"$ARCH\" was found" 1>&2
+      echo 1>&2
+      read -p "install $ALARM without re-downloading? [y/N] : " a
+      echo 1>&2
+      if [ $a ]; then
+        if [ $a = 'y' ]; then
+          echo "$ALARM will be installed from local \"$ARCH\"" 1>&2
+          echo "$ARCH"
+        else
+          echo 1>&2
+          echo "Arch Linux ARM will be downloaded" 1>&2
+        fi
       fi
     fi
-  fi
-}
+  }
 
   ALARM='Arch Linux ARM'
 
