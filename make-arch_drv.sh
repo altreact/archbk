@@ -492,6 +492,9 @@ essentials () {
     exit 1
   fi
 
+  # current directory 
+  DIR="$(pwd)"
+
   # check for previously used ALARM tarball
   tarball="$(have_tarball)" 
 
@@ -504,7 +507,14 @@ essentials () {
       chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
 
       # map chromebook model to Arch Linux ARM codename to determine Arch Linux ARM tarball to use
-      if [ $chr_codename ]; then
+      if [ ! $chr_codename ]; then
+        echo
+        echo 'not enough info is available to continue'
+        echo 'manually download the Arch Linux ARM tarball for your Chromebook, or'
+        echo 'run this script in ChromeOS'
+        echo
+        exit 1
+      else
         if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
           alarm_codename='peach'
           armhf='armv7'
@@ -515,15 +525,11 @@ essentials () {
           alarm_codename='gru'
         elif [ "$(echo "$chr_codename" | grep 'elm')" ] || [ "$(echo "$chr_codename" | grep 'oak')" ]; then
           alarm_codename='oak'
-        else
-          echo 'not enough info is available to continue'
-          echo 'run this script in ChromeOS'
-          exit 1
         fi
      fi
   else
     alarm_codename="$(echo $tarball | sed 's/ArchLinuxARM-//' | sed 's/-latest.tar.gz//')"
-    path_to_tarball="$tarball"
+    path_to_tarball="$DIR/$tarball"
   fi
 
   if [ $armhf ]; then 
@@ -535,7 +541,6 @@ essentials () {
   KERNEL_BEGINNING_SECTOR='8192'
   # get the name of this script
   SCRIPTNAME=`basename "$0"`
-  DIR="$(pwd)"
   ARCH="ArchLinuxARM-"$alarm_codename"-latest.tar.gz" 
 }
 
