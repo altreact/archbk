@@ -3,7 +3,7 @@
 # transfer rootfs, write kernel image
 # optional - let's you keep arch tarball for later use
 install_arch () {
-  
+
   # creates, enables, and starts netctl profile for hidden ssid in Arch Linux
   # or starts wifi-menu for ssid that's not hidden
   # installs wget and cgpt, if user chooses option to install Arch Linux ARM to internal flash memory
@@ -12,49 +12,49 @@ install_arch () {
 
     echo '#!/usr/bin/env bash
 
-		pass_ver () {
-    	while [ true ]; 
-    	do
-      	echo
-      	echo "enter new password for $1"
-				echo
-      	passwd $1 
-      	if [ $? -eq 0 ]; then 	
-		    	break	
-	    	fi
-    	done
-		}
+    pass_ver () {
+      while [ true ]; 
+      do
+        echo
+        echo "enter new password for $1"
+        echo
+        passwd $1 
+        if [ $? -eq 0 ]; then 	
+          break	
+        fi
+      done
+    }
 
-		if [ "$(whoami)" != "root" ]; then
-			echo "this script must be ran as root"
-			echo
-			exit 1
-		fi
+    if [ "$(whoami)" != "root" ]; then
+      echo "this script must be ran as root"
+      echo
+      exit 1
+    fi
 
-		pass_ver root
+    pass_ver root
 
-		echo
+    echo
     read -p "enter a username for your user: " username 
     useradd -m -G wheel -s /bin/bash $username
 
-		pass_ver $username		
+    pass_ver $username		
 
     while [ ! $connected_to_internet ];
     do
-			echo
-	    read -p "is your ssid hidden? [y/N]: " hidden_ssid
- 	   
+      echo
+      read -p "is your ssid hidden? [y/N]: " hidden_ssid
+
       if [ $hidden_ssid = "y" 2> /dev/null ]; then 
- 	 		  echo
+        echo
         read -p "enter hidden SSID: " a
-	      ssid=$a
- 	      read -sp "enter password: " a
-				echo
- 	      passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
- 	      cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
-				netctl enable network && netctl start network 
+        ssid=$a
+        read -sp "enter password: " a
+        echo
+        passwd="$(wpa_passphrase $ssid $a | grep -e "[ ]*psk" | tail -n1 | sed "s/[^0-9]*//")"
+        cat /etc/netctl/examples/wireless-wpa | sed "s/wlan/mlan/g" | sed "s/#P/P/" | sed "s/#H/H/" | sed "s/MyNetwork/$ssid/" | sed "s/WirelessKey/$passwd/" > /etc/netctl/network
+        netctl enable network && netctl start network 
       else
-				echo
+        echo
         wifi-menu -o
       fi
 
@@ -66,37 +66,37 @@ install_arch () {
         echo "you are now connected to the internet"
         echo
         echo "adding $username to sudoers"
-				echo
+        echo
         pacman -S sudo --noconfirm
         sed -i "80i $username ALL=(ALL) ALL" /etc/sudoers
         connected_to_internet=true
       else
         if [ $hidden_ssid = "y" 2> /dev/null ]; then 
-					netctl disable network 
-					rm /etc/netctl/network
-				fi
+          netctl disable network 
+          rm /etc/netctl/network
+        fi
         echo
         echo "ssid and / or passphrase are invalid."
       fi
     done
 
     if [ $root_dev != "mmcblk0" ]; then
-    	echo
+      echo
       read -p "install Arch Linux ARM to internal flash memory? [y/N]: " a
 
-			if [ $a = "y" 2> /dev/mull ]; then 
-				echo
-      	pacman -S cgpt wget --noconfirm ' > helper
-      	 		
-		echo "		sh $SCRIPTNAME mmcblk0" >> helper
+      if [ $a = "y" 2> /dev/mull ]; then 
+        echo
+        pacman -S cgpt wget --noconfirm ' > helper
 
-    echo '		
+        echo "		sh $SCRIPTNAME mmcblk0" >> helper
+
+        echo '		
       fi
-		else
-			echo
-			pacman -S vboot-utils
-			crossystem dev_boot_usb=1 dev_boot_signed_only=0
-		fi
+    else
+      echo
+      pacman -S vboot-utils
+      crossystem dev_boot_usb=1 dev_boot_signed_only=0
+    fi
 
     echo
     read -p "the system will now reboot. login as your newly created user to continue" a
@@ -126,16 +126,16 @@ install_arch () {
   crossystem dev_boot_usb=1 dev_boot_signed_only=0 2> /dev/null
 
   umount /dev/$media* 2> /dev/null
-  
+
   fdisk /dev/$media 1> /dev/null <<EOF
   g
   w
 EOF
-  
+
   cgpt create /dev/$media 1> /dev/null
-  
+
   cgpt add -i 1 -t kernel -b $KERNEL_BEGINNING_SECTOR -s $KERNEL_SIZE -l Kernel -S 1 -T 5 -P 10 /dev/$media 1> /dev/null
-  
+
   DEVICE_SIZE="$(cgpt show /dev/$media | grep "Sec GPT table" | sed -r 's/[0-9]*[ ]*Sec GPT table//' | sed 's/[ ]*//')"
 
   P2_BEGINNING_SECTOR="$(expr $KERNEL_BEGINNING_SECTOR + $KERNEL_SIZE)"
@@ -145,17 +145,17 @@ EOF
   echo "$step) creating root partition on target device"
   step="$(expr $step + 1)"
   add_root_partition="$(echo "cgpt add -i 2 -t data -b $P2_BEGINNING_SECTOR -s $P2_SIZE -l Root /dev/$media")"
-  
-	(eval $add_root_partition 1> /dev/null) &
+
+  (eval $add_root_partition 1> /dev/null) &
   spinner $!
 
   partx -a "/dev/$media" 1> /dev/null 2>&1
-  
-	(mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1) &
-	spinner $!
-  
+
+  (mkfs.ext4 -F "/dev/$p2" 1> /dev/null 2>&1) &
+  spinner $!
+
   cd /tmp && mkdir arch_tmp 2> /dev/null && cd arch_tmp
-  
+
   if [ ! $path_to_tarball ]; then
     echo
     echo "$step) downloading latest $ALARM tarball"
@@ -164,56 +164,56 @@ EOF
     wget http://os.archlinuxarm.org/os/$ARCH
     path_to_tarball="$ARCH"
   fi
-  
+
   mkdir root 2> /dev/null 1>&2
   mount /dev/$p2 root/
-  
+
   echo
   echo "$step) extracting rootfs to target device root partition"
   step="$(expr $step + 1)"
-	(tar -xf $path_to_tarball -C root/ 2> /dev/null) &
-	spinner $!
-  
+  (tar -xf $path_to_tarball -C root/ 2> /dev/null) &
+  spinner $!
+
   # moves script and tarball into /root of target
   # enables one to run script again from ne arch install
   # see README.md for more info
-	(cp $path_to_tarball root/root/$ARCH) &
-	spinner $!
+  (cp $path_to_tarball root/root/$ARCH) &
+  spinner $!
   cp $DIR/$SCRIPTNAME root/root/$SCRIPTNAME
-  
+
   # creates helper script that initiates / automates internet connection
   # moves script to root/ user's directory
   # set script to run at root login
   helper_script
   mv helper root/root/helper.sh
   echo 'sh helper.sh' >> root/root/.bashrc
-  
+
   echo
   echo "$step) writing kernel image to target device kernel partition"
   step="$(expr $step + 1)"
-	(dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1) &
-	spinner $!
-  
+  (dd if=root/boot/vmlinux.kpart of=/dev/$p1 1> /dev/null 2>&1) &
+  spinner $!
+
   echo
   echo "$step) unmounting target device"
   step="$(expr $step + 1)"
-	(umount root) &
-	spinner $!
+  (umount root) &
+  spinner $!
 
-	(sync) &
-	spinner $!
-  
+  (sync) &
+  spinner $!
+
   echo
   echo "installation finished!"
   echo
   if [ -e $ARCH ]; then
     read -p "would you like to keep $ARCH for future installs? [y/n] : " a
     if [ $a = 'y' ]; then
-			(mv $ARCH $DIR/$ARCH) &
+      (mv $ARCH $DIR/$ARCH) &
       spinner $!  
     fi
   fi
-  
+
   cd .. && rm -rf arch_tmp
 
   echo
@@ -221,7 +221,7 @@ EOF
   echo
   echo "press ctrl+u at startup screen to boot $ALARM."
   echo
-  
+
   if [ ${#media} -lt 4 ]; then
     echo "drives will not boot from the blue USB 3.0 port"
     echo "remember to plug drive into black USB 2.0 port to boot from it "
@@ -248,51 +248,51 @@ init () {
   else
     os_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[^0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[p].*//')"
   fi
-  
-find_target_device () {
-  count=0
-  while [ $count -lt 1 ]
-  do
-    base="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed "s/^$os_dev.*$//g" | grep 'G')"
-    devices="$(echo $base | sed "s/[ ]*[0-9]*\.[0-9]G$//g")"
-    
-    for dev in $devices;
+
+  find_target_device () {
+    count=0
+    while [ $count -lt 1 ]
     do
-      count=`expr "$count" + 1`
-      media=$dev
+      base="$(lsblk -ldo NAME,SIZE 2> /dev/null | sed 's/^l.*$//g' | sed 's/^z.*$//g' |  sed "s/^$os_dev.*$//g" | grep 'G')"
+      devices="$(echo $base | sed "s/[ ]*[0-9]*\.[0-9]G$//g")"
+
+      for dev in $devices;
+      do
+        count=`expr "$count" + 1`
+        media=$dev
+      done
+
+      if [ $count -gt 1 ]; then
+        echo "#############################################" 1>&2
+        echo '# more than one install media was detected. #' 1>&2
+        echo "#############################################" 1>&2
+        echo 1>&2
+        echo 'Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device.)' 1>&2
+        echo 1>&2
+        echo 1>&2
+        echo "to safely remove a media storage device:" 1>&2
+        echo "    1) go to files," 1>&2
+        echo "    2) click the eject button next to the device you wish to remove," 1>&2
+        echo "    3) unpug the device" 1>&2
+        echo 1>&2
+        echo 1>&2
+        read -p "press any key to continue..." n
+        count=0
+      elif [ $count -lt 1 ]; then
+        echo 1>&2
+        echo "##################################" 1>&2
+        echo '# no install media was detected. #' 1>&2
+        echo "##################################" 1>&2
+        echo 1>&2
+        echo 'insert the media you want arch linux to be installed on,' 1>&2
+        echo 1>&2
+        echo 1>&2
+        read -p "press any key to continue..." n
+        count=0
+      fi
     done
-    
-    if [ $count -gt 1 ]; then
-      echo "#############################################" 1>&2
-      echo '# more than one install media was detected. #' 1>&2
-      echo "#############################################" 1>&2
-      echo 1>&2
-      echo 'Make sure that only one media storage device (USB drive / SD card / microSD card) is plugged into this device.)' 1>&2
-      echo 1>&2
-      echo 1>&2
-      echo "to safely remove a media storage device:" 1>&2
-      echo "    1) go to files," 1>&2
-      echo "    2) click the eject button next to the device you wish to remove," 1>&2
-      echo "    3) unpug the device" 1>&2
-      echo 1>&2
-      echo 1>&2
-      read -p "press any key to continue..." n
-      count=0
-    elif [ $count -lt 1 ]; then
-      echo 1>&2
-      echo "##################################" 1>&2
-      echo '# no install media was detected. #' 1>&2
-      echo "##################################" 1>&2
-      echo 1>&2
-      echo 'insert the media you want arch linux to be installed on,' 1>&2
-      echo 1>&2
-      echo 1>&2
-      read -p "press any key to continue..." n
-      count=0
-    fi
-  done
-  echo $media
-}
+    echo $media
+  }
 
   if [ $target_dev ]; then
     media=$target_dev
@@ -310,7 +310,7 @@ find_target_device () {
     read -p "press any continue..." n
     media="$(find_target_device)"
   fi
-  
+
   if [ ${#media} -gt 3 ]; then
     p1=$media"p1"
     p2=$media"p2"
@@ -324,7 +324,7 @@ find_target_device () {
     p2=$media"2"
     type="USB drive"
   fi
-  
+
   echo 1>&2
   echo "****************" 1>&2
   echo "**            **" 1>&2
@@ -351,7 +351,7 @@ find_target_device () {
 # checks if arch linux arm download is possible
 # loops until the user establishes internet connection, or quits
 confirm_internet_connection () {
-  
+
   # checks for a good ping to URL
   check_conn () {
     c="$(ping -c 1 $1 2>/dev/null | head -1 | sed 's/[ ].*//')"
@@ -359,13 +359,13 @@ confirm_internet_connection () {
       echo "0"
     fi
   }
-  
+
   while [ true ]
   do
     # try to connect to archlinuxarm.org
     if [ "$(check_conn 'archlinuxarm.org')" ]; then
       break
-    # if connection was bad,
+      # if connection was bad,
     else
       # try to connect to duckduckgo.com
       if [ "$(check_conn 'google.com')" ]; then
@@ -373,7 +373,7 @@ confirm_internet_connection () {
         echo "site may be down" 1>&2
         echo "try again later" 1>&2
         exit 1
-      # if both connections failed
+        # if both connections failed
       else
         clear
         echo " "                                                                 1>&2
@@ -404,7 +404,7 @@ confirm_internet_connection () {
 # looks for install tarball in current directory, sets path to tarball, if found
 # checks for internet connection, if needed
 essentials () {
- 
+
   # if script is not ran as root, exit 
   if [ "$(whoami)" != "root" ]; then
     echo "this script must be ran as root"
@@ -418,7 +418,7 @@ essentials () {
     chromeos_root_dev="$(lsblk 2> /dev/null | grep ' /mnt/stateful_partition' | tail -n1 | sed 's/part[ ]*\/mnt\/stateful_partition//g' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/p[0-9]//')"
     root_dev="$(lsblk 2> /dev/null | grep '[/]$' | sed 's/[0-9a-z]*//' | sed 's/[^0-9a-z]*[ ].*//' | sed 's/[^0-9a-z]*//g' | sed 's/[p].*//')"
     here="$(lsblk 2> /dev/null | grep "$1[ ][ ]*" | sed -r 's/[^0-9a-z]*[ ].*//')"
-      
+
     if [ ${#1} -lt 3 ] || [ $2 ] || [ ! $here ]; then
       echo "invalid device name" 1>&2
     elif [ $release = 'CHROMEOS' 2> /dev/null ] || [ $release = 'DISTRIB' 2> /dev/null ] &&  [ $1  = "$chromeos_root_dev" ] || [ $1 = $root_dev 2> /dev/null ]; then
@@ -427,12 +427,12 @@ essentials () {
       echo "$1"
     fi
   }
-  
+
   have_prog () {
     $($1 2>fail.txt 1>/dev/null)
     res="$(cat fail.txt 2>/dev/null | sed "s/\n//g" 2>/dev/null | sed 's/ //g')"
     rm fail.txt
-    
+
     if [ $res 2>/dev/null ]; then
       $(echo "$1" >> fail.res)
     fi
@@ -441,11 +441,11 @@ essentials () {
   # gives user the option to skip download, if arch linux arm tarball is detected
   have_tarball() {
     # if Arch Linux tarball is found
-      
+
     ARCH="$(ls | grep ArchLinuxARM-.*-latest.tar.gz 2> /dev/null | head -n1)"
 
     if [ $ARCH ]; then
-        
+
       # ask user if they want to skip download of new tarball
       echo 1>&2
       echo "\"$ARCH\" was found" 1>&2
@@ -479,7 +479,7 @@ essentials () {
   have_prog lsblk
   have_prog wget
   have_prog cgpt
- 
+
   # prompt user to install needed programs
   # then exit 
   if [ -e fail.res ]; then
@@ -498,35 +498,35 @@ essentials () {
   # check for previously used ALARM tarball
   tarball="$(have_tarball)" 
 
-    # if no ALARM tarball is found
-    # check for internet connection for tarball download
-    # parse chromeOS firmware info to identify the chromebook
-    # determin the ALARM codename, based on chromeOS firmeare parse
-    if [ ! $tarball ]; then
-      confirm_internet_connection
-      chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
+  # if no ALARM tarball is found
+  # check for internet connection for tarball download
+  # parse chromeOS firmware info to identify the chromebook
+  # determin the ALARM codename, based on chromeOS firmeare parse
+  if [ ! $tarball ]; then
+    confirm_internet_connection
+    chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
 
-      # map chromebook model to Arch Linux ARM codename to determine Arch Linux ARM tarball to use
-      if [ ! $chr_codename ]; then
-        echo
-        echo 'not enough info is available to continue'
-        echo 'manually download the Arch Linux ARM tarball for your Chromebook, or'
-        echo 'run this script in ChromeOS'
-        echo
-        exit 1
-      else
-        if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
-          alarm_codename='peach'
-          armhf='armv7'
-        elif [ "$(echo "$chr_codename" | grep 'veyron')" ]; then
-          alarm_codename='veyron'
-          armhf='armv7'
-        elif [ "$(echo "$chr_codename" | grep 'kevin')" ] || [ "$(echo "$chr_codename" | grep 'gru')" ]; then
-          alarm_codename='gru'
-        elif [ "$(echo "$chr_codename" | grep 'elm')" ] || [ "$(echo "$chr_codename" | grep 'oak')" ]; then
-          alarm_codename='oak'
-        fi
-     fi
+    # map chromebook model to Arch Linux ARM codename to determine Arch Linux ARM tarball to use
+    if [ ! $chr_codename ]; then
+      echo
+      echo 'not enough info is available to continue'
+      echo 'manually download the Arch Linux ARM tarball for your Chromebook, or'
+      echo 'run this script in ChromeOS'
+      echo
+      exit 1
+    else
+      if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
+        alarm_codename='peach'
+        armhf='armv7'
+      elif [ "$(echo "$chr_codename" | grep 'veyron')" ]; then
+        alarm_codename='veyron'
+        armhf='armv7'
+      elif [ "$(echo "$chr_codename" | grep 'kevin')" ] || [ "$(echo "$chr_codename" | grep 'gru')" ]; then
+        alarm_codename='gru'
+      elif [ "$(echo "$chr_codename" | grep 'elm')" ] || [ "$(echo "$chr_codename" | grep 'oak')" ]; then
+        alarm_codename='oak'
+      fi
+    fi
   else
     alarm_codename="$(echo $tarball | sed 's/ArchLinuxARM-//' | sed 's/-latest.tar.gz//')"
     path_to_tarball="$DIR/$tarball"
