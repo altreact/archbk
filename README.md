@@ -5,6 +5,8 @@ A robust shell script (bash / sh) that automates the installation of an Arch Lin
 Confirmed devices:
     
    * Samsung Series 3 ARM Chromebook http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs
+   
+   * Acer Chromebook R13 https://www.acer.com/ac/en/US/content/series/acerchromebookr13
     
 Unconfirmed Devices:
 
@@ -33,8 +35,6 @@ Unconfirmed Devices:
    * Hisense Chromebook C11 https://www.engadget.com/products/hisense/chromebook/specs/
 
    * and possibly other Chromebooks with the Rockchip RK3288 ARM Processor
-
-   * Acer Chromebook R13 https://www.acer.com/ac/en/US/content/series/acerchromebookr13
    
    * Samsung Chromebook Plus http://www.samsung.com/us/computing/chromebooks/12-14/xe513c24-k01us-xe513c24-k01us/
 
