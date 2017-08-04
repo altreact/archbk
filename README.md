@@ -8,6 +8,8 @@ Confirmed devices:
    
    * Acer Chromebook R13 https://www.acer.com/ac/en/US/content/series/acerchromebookr13
     
+   * Epik 11.6 https://www.walmart.com/ip/11-6-Chromebook-Laptop-Quad-Core-Processor-4GB-Ram-32GB-Hard-Drive/54445637
+    
 Unconfirmed Devices:
 
    if you try the script for one of these devices, and it works, please let me know which chromebook it worked for, so i can add it to confimed devices. thank you.
@@ -79,7 +81,7 @@ To install Arch Linux ARM to internal flash memory:
    3) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
    4) "sh helper.sh"
    5) follow the instructions & let the script do it's thing.
-   6) reboot, then press ctrl + d to boot Arch Linux ARM (username: root , password: root)
+   6) reboot, then press ctrl + d to boot Arch Linux ARM from internal flash memory.
    
 After Installation:
 
@@ -90,6 +92,6 @@ After Installation:
 
 Upcomming features:
  
- * ability to use one script for multiple ARM Chromebooks.
-     
+
+
  * ability to install MATE Desktop Environment (https://mate-desktop.org/), based on the instructions found here: https://calvin.me/arch-linux-samsung-arm-chromebook/
