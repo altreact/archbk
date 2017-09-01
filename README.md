@@ -2,6 +2,8 @@
 
 A robust shell script (bash / sh) that automates the installation of an Arch Linux ARM base system, for use with ARM Chromebooks
 
+<br/>
+
 Confirmed devices:
     
    * [Samsung Series 3 ARM Chromebook](http://www.samsung.com/us/computer/chrome-os-devices/XE303C12-A01US-specs)
@@ -10,16 +12,21 @@ Confirmed devices:
     
    * [Epik 11.6](https://www.walmart.com/ip/11-6-Chromebook-Laptop-Quad-Core-Processor-4GB-Ram-32GB-Hard-Drive/54445637)
    
+   <br/>
    
    External only (sdcard, usb stick /drive) click [here](https://github.com/altreact/archbk/issues/3) for patch progress
    
    * [Asus Flip C100PA](https://www.asus.com/us/Commercial-Notebooks/ASUS_Chromebook_Flip_C100PA/)
 
    * [Asus C201](https://www.asus.com/Notebooks/ASUS_Chromebook_C201/)
+   
+   <br/>
     
 Unconfirmed Devices:
 
    if you try the script for one of these devices, and it works, please let me know which chromebook it worked for, so i can add it to confimed devices. thank you.
+   
+   <br/>
 
    * [HP Chromebook 11 G1](https://goo.gl/GA02tj)
 
@@ -30,10 +37,8 @@ Unconfirmed Devices:
    * [Samsung Chromebook 2 13"](http://www.samsung.com/us/business/computing/chrome-devices/XE503C32-K01US)
 
    * and possibly other Chromebooks with the Exynos ARM Processor
-
-
-
    
+   <br/>
 
    * [AOpen Chromebase Mini](http://www.aopen.com/us/chrome-mini-products)
 
@@ -45,6 +50,7 @@ Unconfirmed Devices:
    
    * [Samsung Chromebook Plus](http://www.samsung.com/us/computing/chromebooks/12-14/xe513c24-k01us-xe513c24-k01us/)
 
+   <br/> 
    
 Possible Future Upcomming Devices:
    
@@ -54,7 +60,7 @@ Possible Future Upcomming Devices:
    
    * [HP Chromebook 14 G3](http://support.hp.com/us-en/product/hp-chromebook-14-g3/7096564/manuals)
    
-   
+   <br/>
 
 This script automates the install instructions at [Arch Linux ARM](https://archlinuxarm.org/)
    
@@ -63,9 +69,14 @@ To install Arch Linux ARM on a SDcard / USB drive:
    ___* Make sure that developer mode is enabled.
    (enabling developer mode will wipe everything on the chromebook's internal flash memory. back up anything you want to keep.)___
 
-     hold down the ESC and Refresh keys and poke the ower button
-     at the Recovery screen press Ctrl-D (there's no prompt - you have to know to do it).
-     confirm switching to developer mode by pressing enter, and the laptop will reboot and reset the system. This takes about 15-20 minutes.
+     Hold down the ESC and Refresh keys and poke the ower button.
+     At the Recovery screen press Ctrl-D 
+     (there's no prompt - you have to know to do it).
+     
+     Confirm switching to developer mode by pressing enter, 
+     and the laptop will reboot and reset the system. 
+     
+     This takes about 15-20 minutes.
      
      **Note: After enabling developer mode, you will need to press Ctrl-D each time you boot, or wait 30 seconds to continue booting.**
 
@@ -83,10 +94,9 @@ To install Arch Linux ARM to internal flash memory:
 
    1) [create a chromeos recovery media device](https://goo.gl/FfCQkC)
    2) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
-   3) reboot, then press ctrl + u to boot Arch Linux ARM (username: root , password: root)
-   4) `sh helper.sh`
-   5) follow the instructions & let the script do it's thing.
-   6) reboot, then press ctrl + d to boot Arch Linux ARM from internal flash memory.
+   3) `sh helper.sh`(allows you to easily: change root password, create new sudo user, connect to wifi, install Arch on internal flash memory)
+   4) follow the instructions & let the script do it's thing.
+   5) press cnlr + d, then login with your new user credentials.
    
 After Installation:
 
