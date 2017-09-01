@@ -1,6 +1,6 @@
 # archbk
 
-A robust shell script (bash / sh) that automates the installation of an Arch Linux ARM base system, for use with ARM Chromebooks
+A robust shell script (bash / sh) that automates the installation of an Arch Linux ARM base system, for use with ARM Chromebooks, based on the install instructions at [Arch Linux ARM](https://archlinuxarm.org/).
 
 <br/>
 
@@ -61,8 +61,6 @@ Possible Future Upcomming Devices:
    * [HP Chromebook 14 G3](http://support.hp.com/us-en/product/hp-chromebook-14-g3/7096564/manuals)
    
    <br/>
-
-This script automates the install instructions at [Arch Linux ARM](https://archlinuxarm.org/)
    
 To install Arch Linux ARM on a SDcard / USB drive:
 
