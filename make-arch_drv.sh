@@ -474,11 +474,11 @@ essentials () {
   fi
 
   # check system for needed programs  
-  have_prog sed
-  have_prog grep
-  have_prog lsblk
-  have_prog wget
-  have_prog cgpt
+  # have_prog sed
+  # have_prog grep
+  # have_prog lsblk
+  # have_prog wget
+  # have_prog cgpt
 
   # prompt user to install needed programs
   # then exit 
