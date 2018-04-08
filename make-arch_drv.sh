@@ -161,7 +161,7 @@ EOF
     echo "$step) downloading latest $ALARM tarball"
     echo
     step="$(expr $step + 1)"
-    wget http://os.archlinuxarm.org/os/$ARCH
+    curl http://os.archlinuxarm.org/os/$ARCH
     path_to_tarball="$ARCH"
   fi
 
@@ -477,7 +477,7 @@ essentials () {
   # have_prog sed
   # have_prog grep
   # have_prog lsblk
-  # have_prog wget
+  # have_prog curl
   # have_prog cgpt
 
   # prompt user to install needed programs
