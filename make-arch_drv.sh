@@ -516,7 +516,7 @@ essentials () {
       exit 1
     else
       if [ "$(echo "$chr_codename" | grep 'daisy')" ] || [ "$(echo "$chr_codename" | grep 'snow')" ] || [ "$(echo "$chr_codename" | grep 'peach')" ]; then
-        alarm_codename='peach'
+        alarm_codename='chromebook'
         armhf='armv7'
       elif [ "$(echo "$chr_codename" | grep 'veyron')" ]; then
         alarm_codename='veyron'
