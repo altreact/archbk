@@ -47,7 +47,7 @@ To install Arch Linux ARM on a SDcard / USB drive:
    ___* Make sure that developer mode is enabled.
    (enabling developer mode will wipe everything on the chromebook's internal flash memory. back up anything you want to keep.)___
 
-     Hold down the ESC and Refresh keys and poke the ower button.
+     Hold down the ESC and Refresh keys and poke the Power button.
      At the Recovery screen press Ctrl-D 
      (there's no prompt - you have to know to do it).
      
