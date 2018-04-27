@@ -367,7 +367,7 @@ confirm_internet_connection () {
       break
       # if connection was bad,
     else
-      # try to connect to duckduckgo.com
+      # try to connect to google.com
       if [ "$(check_conn 'google.com')" ]; then
         echo "failed to connect to archlinuxarm.org" 1>&2
         echo "site may be down" 1>&2
