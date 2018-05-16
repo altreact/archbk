@@ -76,7 +76,7 @@ To install Arch Linux ARM to internal flash memory:
    2) follow instructions above to install Arch Linux ARM on a SDcard / USB drive.
    3) `sh helper.sh`(allows you to easily: change root password, create new sudo user, connect to wifi, install Arch on internal flash memory)
    4) follow the instructions & let the script do it's thing.
-   5) press cnlr + d, then login with your new user credentials.
+   5) press ctlr + d, then login with your new user credentials.
    
 After Installation:
 
